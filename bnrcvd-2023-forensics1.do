@@ -8,6 +8,15 @@
 *  AUTHOR:  IAN HAMBLETON
 *  PROJECT: BNR Refit Consultancy
 *  CREATED:  29-OCT-2025
+
+* This DO file performs quality-control “forensic” checks on the
+* 2009-2023 cumulative BNR-CVD dataset.
+* It:
+*   - Compares multiple versions of the 2023 event datasets (e.g.,
+*     datasets assembled by different abstractors or exported at
+*     different times).
+*   - This was to explore a particular problem, to attempt to understand 
+*     the 'correct' Stroke dataset for joining with previous years
 *--------------------------------------------------------------------
 
 *-------------------------------

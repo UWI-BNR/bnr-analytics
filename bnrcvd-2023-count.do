@@ -15,6 +15,22 @@
                 - by year
                 - by sex 
                 - by age groups
+
+This DO file produces core descriptive counts of cardiovascular events
+(stroke and acute myocardial infarction) for 2010–2023, with a focus
+on the latest year (2023).
+
+It:
+  - Loads the prepared BNR-CVD events dataset and restricts to strokes
+    and MIs with valid dates in the analysis period.
+  - Generates annual and weekly counts of events by disease type and sex.
+  - Compares 2023 cumulative weekly counts with the average of the
+    previous five years, and visualises these patterns in a “worm plot”.
+  - Calculates the proportion of events occurring before age 70 (premature
+    CVD) for men and women, and compares 2023 with the recent 5-year average.
+  - Exports figures (PNG) and a short PDF narrative summary for use in
+    BNR reporting (e.g. annual report and slide decks).
+
 **************************************************************************/
 
 ** GLOBALS 

@@ -16,6 +16,24 @@
                 - by sex 
                 - age-stratified
                 - crude and age-standardized to WHO Std Pop (2000)
+
+SCRIPT OVERVIEW (added commentary)
+
+This do-file produces an initial description of in-hospital case-fatality for
+the 2023 BNR-CVD dataset. It assumes that a derived CASE-FATALITY dataset has
+already been created by `bnrcvd-2023-prep1.do` and that global paths/macros
+have been configured in `bnrcvd-globals.do`.
+
+MAIN STEPS
+  1. Load the interim case-fatality dataset prepared by the PREP script.
+  2. Apply broad restrictions (e.g. remove DCO-only events, setup year 2009).
+  3. Derive key variables needed to classify vital status at discharge and to
+     distinguish confirmed vs possible deaths (including 28-day windows).
+  4. Create summary tables and graphics for case-fatality by disease (AMI vs
+     stroke), sex, age-group and time period, matching the BNR reporting
+     framework used in the annual reports.
+  5. Export figures and a narrative "What This Means" section into the PDF
+     report for direct inclusion in the 2023 BNR-CVD outputs.
 **************************************************************************/
 
 cap log close 
@@ -27,8 +45,8 @@ do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-prep1"
 do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-globals"
 
 ** --------------------------------------------------------------
-** (1) Load the interim dataset - CASE-FATALITY
-**     Dataset prepared in: bnrcvd-2023-prep1.do
+** Load the interim dataset - CASE-FATALITY
+** Dataset prepared in: bnrcvd-2023-prep1.do
 ** --------------------------------------------------------------
 use "${tempdata}\bnr-cvd-case-fatality-${today}-prep1.dta", clear 
 
@@ -37,6 +55,10 @@ use "${tempdata}\bnr-cvd-case-fatality-${today}-prep1.dta", clear
 drop if dco==1 
 drop dco 
 drop if yoe==2009  /// This was a setup year - don't report
+
+** --------------------------------------------------------------
+** Derive case-fatality indicators at the EVENT LEVEL 
+** --------------------------------------------------------------
 
 ** INITIAL LOOK AT DATA - ensure numbers linkage with CASE COUNT briefing
 ** Vital Status At Discarge (sadi, 1=alive, 2=dead) 
@@ -62,7 +84,11 @@ replace cf = .a if cf==.
 label define cf_ 1 "Conf.Alive" 2 "Undoc Alive" 3 "Conf.CF" 4 "Prob.CF" 5 "Poss.CF" .a "No dates"
 label values cf cf_ 
 
-** Length of stay (Using only CONFIRMED alive, CONFIRMED hospital death, AND PROBABLE hospital death )
+** --------------------------------------------------------------
+** Length of stay 
+** (Using only CONFIRMED alive, 
+**  CONFIRMED hospital death, AND PROBABLE hospital death)
+** --------------------------------------------------------------
 gen los = dodi - doe 
 replace los = (dod - doe) if cf == 3 | cf == 4
 drop  doe_dod_diff 
@@ -70,7 +96,9 @@ order cf los , after(sadi)
 label var cf "Vital status at discharge/death (with uncertainty)"
 label var los "Length of hospital stay (days)"
 
+** --------------------------------------------------------------
 ** Macros for GRAPHIC - FIGURE 2
+** --------------------------------------------------------------
 preserve
     collapse (p50) ap50=agey, by(etype sex) 
     forval x = 1(1)4 {
@@ -88,7 +116,7 @@ tempfile cf_temp1
 save `cf_temp1', replace 
 
 ** --------------------------------------------------------------
-** (1)  MODELLED PROBABILITY OF DEATH
+** MODELLED PROBABILITY OF DEATH
 **      Without then with Age Adjustment
 **      For Stroke and AMI separated models
 **      Calculate and Add to aggregated dataset 
@@ -180,8 +208,10 @@ preserve
 restore
 
 
-
-** FIGURE 2 (AGE DIFFERENCES BY SEX)
+** --------------------------------------------------------------
+** FIGURE 2 
+** (AGE AT ADMISSION / IN-HOSPITAL DEATH BY EVENT TYPE / SEX)
+** --------------------------------------------------------------
         #delimit ;
             gr twoway 
                 /// Graph Furniture Placeholder (need 1 graphic even though this is effectively a Table)
@@ -231,8 +261,10 @@ restore
         #delimit cr	
         graph export "${graphs}/bnrcvd-case-fatality-figure2.png", replace width(3000)
 
-** Case-Fatality (2-year intervals for dataset + graphic)
-**preserve
+    ** --------------------------------------------------------------
+    ** FIGURE 1 
+    ** Case-Fatality (2-year intervals for dataset + graphic)
+    ** --------------------------------------------------------------
     tabulate cf, gen(cf) 
     gen event = 1 
 
@@ -276,40 +308,40 @@ restore
     label var adj_lb "CF probability Lower Bound (modelled, age adjusted)"
     label var adj_ub "CF probability Upper Bound (modelled, age adjusted)"
 
-** Dataset for Tabulations
+    ** Dataset for Tabulations
     save "${tempdata}/bnrcvd-case-fatality.dta", replace 
 
-** Recoding x-axis for visual clarity (graph separation)
-* x-axis shift
-local shift = 6
-replace year2 = year2 + `shift' if etype==2 
-label define year2_ 1 "2010-2011" 2 "2012-2013" 3 "2014-2015" /// 
+    ** Recoding x-axis for visual clarity (graph separation)
+    * x-axis shift
+    local shift = 6
+    replace year2 = year2 + `shift' if etype==2 
+    label define year2_ 1 "2010-2011" 2 "2012-2013" 3 "2014-2015" /// 
                     4 "2016-2017" 5 "2018-2019" 6 "2020-2021" 7 "2022-2023" ///
                     8 "2010-2011" 9 "2012-2013" 10 "2014-2015" /// 
                     11 "2016-2017" 12 "2018-2019" 13 "2020-2021" 14 "2022-2023", modify
-label values year2 year2_ 
+    label values year2 year2_ 
 
-* Line width / dot size
-local dot_out = 7
-local dot_in = 5
-local lw = 0.75
-local lw2 = 0.5
-* Strokes 
-local start1 = 1
-local prob1 = 4
-local dots1 = 6
-* Heart Attacks 
-local start2 = 1 + `shift'
-local prob2 = 4 + `shift'
-local dots2 = 5 + `shift'
+    * Line width / dot size
+    local dot_out = 7
+    local dot_in = 5
+    local lw = 0.75
+    local lw2 = 0.5
+    * Strokes 
+    local start1 = 1
+    local prob1 = 4
+    local dots1 = 6
+    * Heart Attacks 
+    local start2 = 1 + `shift'
+    local prob2 = 4 + `shift'
+    local dots2 = 5 + `shift'
 
-local year "year2"
+    local year "year2"
 
-** Legend location - square (y, x)
-local legend_circle1 17.5 1.5
-local legend_circle3 17.5 2.6
-local legend_circle2 37.5 8
-local legend_circle4 37.5 9.1
+    ** Legend location - square (y, x)
+    local legend_circle1 17.5 1.5
+    local legend_circle3 17.5 2.6
+    local legend_circle2 37.5 8
+    local legend_circle4 37.5 9.1
 
         #delimit ;
             gr twoway 
@@ -386,7 +418,7 @@ local legend_circle4 37.5 9.1
                     name(incidence_figure1, replace)
                     ;
         #delimit cr	
-        graph export "${graphs}/bnrcvd-case-fatality-figure1.png", replace width(3000)
+    graph export "${graphs}/bnrcvd-case-fatality-figure1.png", replace width(3000)
 
 
     ** ---------------------------------------------------------
@@ -444,7 +476,7 @@ local legend_circle4 37.5 9.1
 
 
 ** --------------------------------------------------------------
-** REPORT: INITIALIAZE
+** PDF REPORT: INITIALIAZE
 ** --------------------------------------------------------------
 putpdf clear 
 putpdf begin, pagesize(letter)      ///

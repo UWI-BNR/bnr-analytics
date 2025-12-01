@@ -15,6 +15,22 @@
                 - by sex 
                 - age-stratified
                 - crude and age-standardized to WHO Std Pop (2000)
+
+This script provides an initial description of in-hospital length of
+stay (LOS) for BNR-CVD events in 2010–2023, with emphasis on 2023.
+
+It:
+  - Loads the prepared length-of-stay dataset (derived from the main
+    BNR-CVD events file) and restricts analysis to hospital-treated
+    AMI and stroke events (excluding DCO-only cases and the 2009
+    setup year).
+  - Derives primary LOS measures using discharge or death dates and
+    flags very long stays for review, in the context of changes to
+    discharge-date recording in the 2023 REDCap database.
+  - Uses median regression and related summaries to examine trends in
+    LOS by event type and sex, and generates tabulations and figures
+    (medians and IQRs) for inclusion in the 2023 BNR-CVD reporting
+    and service-planning discussions.
 **************************************************************************/
 
 cap log close 

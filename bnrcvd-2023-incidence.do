@@ -20,6 +20,21 @@
                 - by sex 
                 - age-stratified
                 - crude and age-standardized to WHO Std Pop (2000)
+
+This DO file produces preliminary incidence estimates for acute
+myocardial infarction (AMI) and stroke in 2010–2023, with a focus
+on the 2023 reporting year.
+
+It:
+  - Builds a WHO standard population (5-year age bands) and prepares
+    Barbados population denominators from the UN WPP extract.
+  - Joins BNR-CVD event counts with population data, with and without
+    deaths certified only by death certificate (DCO), to explore the
+    concept of a “hospital-treated event rate” separate from a classic
+    national incidence rate.
+  - Calculates crude and age-standardised rates by year, sex and event
+    type, and derives summary incidence indicators for use in the BNR
+    2023 reporting and sensitivity analyses around inclusion of DCOs.
 **************************************************************************/
 
 ** GLOBALS 

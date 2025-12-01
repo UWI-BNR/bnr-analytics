@@ -13,6 +13,30 @@
 
  NOTES:       DO files works on cumulative dataset provided by JC only
 
+               This file moves us from
+               (A) The official cumulative dataset (2009-2023), to 
+               (B) The analytics dataset used by all 2023 analyses
+
+               So, this DO file prepares the *intermediate analysis dataset* for the
+               2023 BNR-CVD reporting cycle. It is the key staging step between
+               the official cumulative dataset (2009-2023) release and 
+               the raw REDCap export and the downstream analytic scripts.
+
+               It:
+                 - Loads the cleaned REDCap-derived dataset created earlier in the
+                   pipeline and performs additional variable preparation needed for
+                   event-level analysis (AMI and stroke).
+                 - Applies core restrictions (e.g., valid dates, event types, age,
+                   handling of death-certificate-only cases) and harmonises variable
+                   names, formats, and coding conventions across years.
+                 - Produces both a full record-level dataset and a simplified count
+                   dataset, saving them to the temporary data directory for use by
+                   all 2023 analytic DO files.
+
+               This file is the central preparation step for all 2023 BNR-CVD outputs:
+               it must run successfully before case-fatality, incidence, LOS, missing
+               data, performance, and tabulation scripts are executed.
+
 **************************************************************************/
 
 ** GLOBALS 
@@ -57,7 +81,6 @@ use "${data}\2009-2023_identifiable_restructured_cvd_30Oct2025_v2.dta", clear
    * Discharge Vital Signs 
    drop dissysbp disdiasbp disbgmmol carunit 
 
-/*
 ** --------------------------------------------------------------
 ** (3) Preparation and Labelling analysis variables
 ** --------------------------------------------------------------

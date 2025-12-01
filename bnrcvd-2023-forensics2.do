@@ -8,6 +8,17 @@
 *  AUTHOR:  IAN HAMBLETON
 *  PROJECT: BNR Refit Consultancy
 *  CREATED: 31-OCT-2025
+
+** This DO file extends the QC and forensic review by examining file
+** structures, duplicates, and internal inconsistencies across the
+** 2023 BNR-CVD datasets.
+**
+** It:
+**   - Scans sub-directories of the BNR document repository to explore
+**   - Filename uniqueness.
+**   - Duplicate folders and datasets stored in the document repository
+**   - The idea was to highlight the poor folder and file structure in
+**     the DM/ folder.
 *--------------------------------------------------------------------
 
 *-------------------------------

@@ -31,6 +31,11 @@
                 (Group 8)   ASPIRIN: asp1 asp2 asp3 aspdose doasp htoasp mtoasp asp_ampm
                 (Group 9)  DISCHARGE: dmed1 dmed2 dmed3 dmed4 dmed5 dmed6 dmed7 dmed8 dmed9 dmed10 aspdose_dis
                 (Group 10)  STROKE UNIT: doasu dodisu doasu_same dodisu_same
+
+                This particular file:
+                - Created a missing data table structure
+                  That is then used for different variables in the main DO file
+                  bnrcvd-2023-missing.do 
 **************************************************************************/
 
 ** GLOBALS 

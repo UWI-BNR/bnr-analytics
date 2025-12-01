@@ -16,6 +16,10 @@
                 - by year
                 - by sex 
                 - by age groups
+
+                The tabulations created are presented at:
+                https://uwi-bnr.github.io/resource-hub/3Reporting/datatables/
+                
 **************************************************************************/
 
 ** GLOBALS 

@@ -6,17 +6,44 @@
 * - Selected fields only (easy to extend)
 * - One CSV output file
 *******************************************************
+ 
 
-clear all
-set more off
+** ------------------------------------------------
+** ----- INITIALIZE DO FILE -----------------------
+   * Set path 
+   * (EDIT bnrpath.ado 
+   *  to change to your LOCAL PATH) 
+   bnrpath 
+
+   * GLOBALS. This is a relative FILEPATH
+   * Do not need to change 
+   do "do/bnrcvd-globals.do"
+
+   * Log file. This is a relative FILEPATH
+   * Do not need to change 
+   cap log close 
+   log using ${logs}\bnrcvd-2023-redcap, replace 
+
+   * Initialize 
+   version 19 
+   clear all
+   set more off
+** ----- END INITIALIZE DO FILE -------------------
+** ------------------------------------------------
+
+
 
 *------------------------------------------------------
 * 0. Load globals (REDCAP_URL, REDCAP_TOKEN, tempdata)
-*    >>> EDIT THIS PATH TO MATCH YOUR SYSTEM <<<
+* SECURITY NOTE:
+* This DO FILE expects the REDCap API token to be provided either via:
+*   - an environment variable BNR_REDCAP_TOKEN, or
+*   - a local (untracked) do-file that sets global BNR_REDCAP_TOKEN.
+* The token MUST NOT be hard-coded in this script or committed to Git.
 *------------------------------------------------------
-do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-globals"
+do "${do}/bnrcvd-globals.do"
+do "${do}/bnrcvd-2023-redcap-token.do"
 global REDCAP_URL   "https://caribdata.org/redcap/api/"
-global REDCAP_TOKEN "B971D9B37E1C94B99E7DF485B1B47BAD"
 
 *------------------------------------------------------
 * 1. Set / override date range globals for cfadmdate
@@ -46,7 +73,7 @@ import os
 
 # --- Get connection details and values from Stata ---
 api_url    = Macro.getGlobal("REDCAP_URL")
-api_token  = Macro.getGlobal("REDCAP_TOKEN")
+api_token  = Macro.getGlobal("BNR_REDCAP_TOKEN")
 start_date = Macro.getGlobal("REDCAP_START")
 end_date   = Macro.getGlobal("REDCAP_END")
 outcsv     = Macro.getLocal("outcsv")
@@ -62,22 +89,9 @@ proj = Project(api_url, api_token)
 # NOTE:
 #  - 'redcap_event_name' will be included automatically for
 #    longitudinal projects; no need to list it here explicitly.
-#  - To widen scope later, just extend this list.
-#    "recid",
-#    "sex",
-#    "dob",
-#    "cfage",
-#    "edate",
-#    "cfadmdate",
-#    "dlc",
-#    "cfdod",
-#    "vstatus",
 # ---------------------------------------------------------------
 fields = [
     "recid",                
-    "sd_eyear",           
-    "sd_absstatus",       
-    "redcap_event_name",  
     "cfdoa",              
     "fname",              
     "mname",              
@@ -86,8 +100,6 @@ fields = [
     "dob",                
     "cfage",              
     "cfage_da",           
-    "age",                
-    "dd_age",             
     "natregno",           
     "recnum",             
     "cfadmdate",          

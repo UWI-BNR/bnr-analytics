@@ -22,13 +22,31 @@
                 
 **************************************************************************/
 
-** GLOBALS 
-do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-prep1"
-do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-globals"
+** ------------------------------------------------
+** ----- INITIALIZE DO FILE -----------------------
+   * Set path 
+   * (EDIT bnrpath.ado 
+   *  to change to your LOCAL PATH) 
+   bnrpath 
 
-* Log File 
-cap log close 
-log using ${logs}\bnrcvd-2023-tabulations, replace 
+   * GLOBALS. This is a relative FILEPATH
+   * Do not need to change 
+   do "do/bnrcvd-globals.do"
+
+   * Log file. This is a relative FILEPATH
+   * Do not need to change 
+   cap log close 
+   log using ${logs}\bnrcvd-2023-tabulations, replace 
+
+   * Initialize 
+   version 19 
+   clear all
+   set more off
+** ----- END INITIALIZE DO FILE -------------------
+** ------------------------------------------------
+
+** DATASET PREPARATION 
+do "${do}\bnrcvd-2023-prep1"
 
 ** --------------------------------------------------------------
 ** (1) Load the interim dataset - COUNT
@@ -62,12 +80,12 @@ label var etype "CVD Event Type"
         label var year "CVD Event Year"; 
         table (year) (etype sex), 
             statistic(count event) 
-            export("${tempdata}\bnr-cvd-2023-table1.md", replace as(md))
+            export("${tables}\bnr-cvd-2023-table1.md", replace as(md))
             title(Table 1. Annual Event Count by Year)
             ;
         table (year) (etype sex), 
             statistic(count event) 
-            export("${tempdata}\bnr-cvd-2023-table1.xlsx", replace as(xlsx) sheet("Table1", replace))
+            export("${tables}\bnr-cvd-2023-table1.xlsx", replace as(xlsx) sheet("Table1", replace))
             note(Prepared by Ian Hambleton on ${todayiso}, for the Barbados National Registry)            
             title(Table 1. Annual Event Count by Year)
             ;
@@ -85,12 +103,12 @@ forval yr = 2010(1)2023 {
         #delimit ; 
         table (woe) (etype) if yoe==`yr', 
                 statistic(count event) 
-                export("${tempdata}\bnr-cvd-2023-table2-`yr'.md", replace as(md))
+                export("${tables}\bnr-cvd-2023-table2-`yr'.md", replace as(md))
                 title(Table 2. Weekly Event Count for `yr')
                 ;
         table (woe) (etype) if yoe==`yr', 
                 statistic(count event) 
-                export("${tempdata}\bnr-cvd-2023-table2.xlsx", modify as(xlsx) sheet("Table2_`yr'", replace))
+                export("${tables}\bnr-cvd-2023-table2.xlsx", modify as(xlsx) sheet("Table2_`yr'", replace))
                 note(Prepared by Ian Hambleton on ${todayiso}, for the Barbados National Registry)            
                 title(Table 2. Weekly Event Count for `yr')
                 ;
@@ -128,7 +146,7 @@ preserve
                 statistic(mean perc) 
                 nototals 
                 nformat(%5.1f)
-                export("${tempdata}\bnr-cvd-2023-table3.md", replace as(md))
+                export("${tables}\bnr-cvd-2023-table3.md", replace as(md))
                 title(Table 3. Event Percentage among Younger Adults (<70 years) and Older Adults (70+ years))
                 ;
         #delimit cr 
@@ -137,7 +155,7 @@ preserve
                 statistic(mean perc) 
                 nototals 
                 nformat(%5.1f)
-                export("${tempdata}\bnr-cvd-2023-table3.xlsx", modify as(xlsx) sheet("Table3", replace))
+                export("${tables}\bnr-cvd-2023-table3.xlsx", modify as(xlsx) sheet("Table3", replace))
                 note(Prepared by Ian Hambleton on ${todayiso}, for the Barbados National Registry)            
                 title(Table 3. Event Percentage among Younger Adults (<70 years) and Older Adults (70+ years))
                 ;
@@ -196,7 +214,7 @@ restore
                 statistic(mean perc) 
                 nototals 
                 nformat(%5.1f)
-                export("${tempdata}\bnr-cvd-2023-table4.md", replace as(md))
+                export("${tables}\bnr-cvd-2023-table4.md", replace as(md))
                 title(Table 4. Event Percentage by 10-Year Age Groups)
                 ;
         #delimit cr 
@@ -205,7 +223,7 @@ restore
                 statistic(mean perc) 
                 nototals 
                 nformat(%5.1f)
-                export("${tempdata}\bnr-cvd-2023-table4.xlsx", modify as(xlsx) sheet("Table4", replace))
+                export("${tables}\bnr-cvd-2023-table4.xlsx", modify as(xlsx) sheet("Table4", replace))
                 note(Prepared by Ian Hambleton on ${todayiso}, for the Barbados National Registry)            
                 title(Table 4. Event Percentage by 10-Year Age Groups)
                 ;
@@ -244,7 +262,7 @@ use "${data}/bnrcvd-incidence.dta", clear
                         statistic(mean ub_gam) 
                         nototals 
                         nformat(%5.1f)
-                        export("${tempdata}\bnr-cvd-2023-table5-`yr'.md", replace as(md))
+                        export("${tables}\bnr-cvd-2023-table5-`yr'.md", replace as(md))
                         title(Table 5. CVD Incidence Rates for `yr')
                         ;
                 table (year dco) (etype sex) if yoe==`yr', 
@@ -254,7 +272,7 @@ use "${data}/bnrcvd-incidence.dta", clear
                         statistic(mean ub_gam) 
                         nototals 
                         nformat(%5.1f)
-                        export("${tempdata}\bnr-cvd-2023-table5.xlsx", modify as(xlsx) sheet("Table5_`yr'", replace))
+                        export("${tables}\bnr-cvd-2023-table5.xlsx", modify as(xlsx) sheet("Table5_`yr'", replace))
                         note(Prepared by Ian Hambleton on ${todayiso}, for the Barbados National Registry)            
                         note(Adjusted Rate Confidence Limits (95%) - Tiwari, Clegg and Zhou bounds)            
                         note(Adjusted Rates use the WHO (2000) World Standard Population)            
@@ -289,7 +307,7 @@ label values type type_
                         statistic(mean srr) 
                         nototals 
                         nformat(%5.2f)
-                        export("${tempdata}\bnr-cvd-2023-table6.md", replace as(md))
+                        export("${tables}\bnr-cvd-2023-table6.md", replace as(md))
                         note(Prepared by Ian Hambleton on ${todayiso}, for the Barbados National Registry)            
                         note(${dagger} IRR = Incidence Rate Ratio with 95% Confidence Limits)            
                         note(${ddagger} Each 2-year time period compared to (2010-2011))            
@@ -299,7 +317,7 @@ label values type type_
                         statistic(mean srr) 
                         nototals 
                         nformat(%5.2f)
-                        export("${tempdata}\bnr-cvd-2023-table6.xlsx",  modify as(xlsx) sheet("Table6", replace))
+                        export("${tables}\bnr-cvd-2023-table6.xlsx",  modify as(xlsx) sheet("Table6", replace))
                         note(Prepared by Ian Hambleton on ${todayiso}, for the Barbados National Registry)            
                         note(${dagger} IRR = Incidence Rate Ratio with 95% Confidence Limits)            
                         note(${ddagger} Each 2-year time period compared to (2010-2011))            
@@ -327,7 +345,7 @@ label values year2 year2_
                 statistic(mean ccase)  
                 nformat(%5.1f)
                 
-                export("${tempdata}\bnr-cvd-2023-table7.md", replace as(md))
+                export("${tables}\bnr-cvd-2023-table7.md", replace as(md))
                 note(Prepared by Ian Hambleton on ${todayiso}, for the Barbados National Registry)            
                 title(Table 7. CVD In-Hospital Fatality Percentage (2010 to 2023))
                 ;
@@ -335,7 +353,7 @@ label values year2 year2_
                 statistic(mean ccase)  
                 nformat(%5.1f)
                 
-                export("${tempdata}\bnr-cvd-2023-table7.xlsx", modify as(xlsx) sheet("Table7", replace))
+                export("${tables}\bnr-cvd-2023-table7.xlsx", modify as(xlsx) sheet("Table7", replace))
                 note(Prepared by Ian Hambleton on ${todayiso}, for the Barbados National Registry)            
                 title(Table 7. CVD In-Hospital Fatality Percentage (2010 to 2023))
                 ;
@@ -367,7 +385,7 @@ keep if cf==1
                 statistic(p25 los_primary)  
                 statistic(p75 los_primary)  
                 nformat(%5.0f)
-                export("${tempdata}\bnr-cvd-2023-table8.md", replace as(md))
+                export("${tables}\bnr-cvd-2023-table8.md", replace as(md))
                 note(Prepared by Ian Hambleton on ${todayiso}, for the Barbados National Registry)            
                 title(Table 8. CVD Typical (Median) In-Hospital Length of Stay (2010 to 2023))
                 ;
@@ -376,7 +394,7 @@ keep if cf==1
                 statistic(p25 los_primary)  
                 statistic(p75 los_primary)  
                 nformat(%5.0f)
-                export("${tempdata}\bnr-cvd-2023-table8.xlsx", modify as(xlsx) sheet("Table8", replace))
+                export("${tables}\bnr-cvd-2023-table8.xlsx", modify as(xlsx) sheet("Table8", replace))
                 note(Prepared by Ian Hambleton on ${todayiso}, for the Barbados National Registry)            
                 title(Table 8. CVD Typical (Median) In-Hospital Length of Stay (2010 to 2023))
                 ;

@@ -39,10 +39,6 @@
    local meta_xlsx "${graphs}/bnrcvd-count-figure1.xlsx"
    local meta_yaml "${graphs}/bnrcvd-count-figure1.yml"
 
-   * Now run the Python block:
-   python:
-     // ... paste Python code block here ...
-   end
 ------------------------------------------------------------------------------
 */
 

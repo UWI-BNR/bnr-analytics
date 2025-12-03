@@ -20,19 +20,36 @@
                 - by age groups
 **************************************************************************/
 
-version 18
-clear all
-set more off
+** ------------------------------------------------
+** ----- INITIALIZE DO FILE -----------------------
+   * Set path 
+   * (EDIT bnrpath.ado 
+   *  to change to your LOCAL PATH) 
+   bnrpath 
 
-** GLOBALS 
-do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-globals.do"
+   * GLOBALS. This is a relative FILEPATH
+   * Do not need to change 
+   do "do/bnrcvd-globals.do"
+
+   * Log file. This is a relative FILEPATH
+   * Do not need to change 
+   cap log close 
+   log using ${logs}\bnrcvd-2023-count, replace 
+
+   * Initialize 
+   version 19 
+   clear all
+   set more off
+** ----- END INITIALIZE DO FILE -------------------
+** ------------------------------------------------
+
 
 ********************************************************************************
 * (A) SETUP
 *       Edit data filenames
 ********************************************************************************
-local csvfile  "${tempdata}\unwpp_brb_2020_2025.csv"
-local dtafile  "${tempdata}\unwpp_brb_2020_2025.dta"
+local csvfile   "${tempdata}\unwpp_brb_2020_2025.csv"
+local dtafile   "${tempdata}\unwpp_brb_2020_2025.dta"
 local dtafile2  "${data}\unwpp_brb_2020_2025.dta"
 
 ********************************************************************************
@@ -40,8 +57,8 @@ local dtafile2  "${data}\unwpp_brb_2020_2025.dta"
 ********************************************************************************
 * Host and path template per UN Data Portal API
 local host      "population.un.org"
-local indicator "46"     // total population (verify for your use case)
-local location  "52"    //  Barbados (UN DP location id) 
+local indicator "46"     // Code for Total Population (NOTE: verify for each individual use case)
+local location  "52"    //  Code for Barbados (UN DP location id) 
 local startyr   "2010"
 local endyr     "2025"
 

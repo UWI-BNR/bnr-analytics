@@ -38,14 +38,6 @@
                   bnrcvd-2023-missing.do 
 **************************************************************************/
 
-** GLOBALS 
-** do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-prep1"
-** do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-globals"
-
-* Log File 
-** cap log close 
-** log using ${logs}\bnrcvd-2023-missing-collect, replace 
-
 *--- Collect Table Information
 collect clear 
 qui: collect:   table (yoe) (),       ///

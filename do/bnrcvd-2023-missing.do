@@ -33,22 +33,38 @@
                 (Group 10)  STROKE UNIT: doasu dodisu doasu_same dodisu_same
 **************************************************************************/
 
-** GLOBALS 
-do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-prep1"
-do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-globals"
+** ------------------------------------------------
+** ----- INITIALIZE DO FILE -----------------------
+   * Set path 
+   * (EDIT bnrpath.ado 
+   *  to change to your LOCAL PATH) 
+   bnrpath 
 
-* Log File 
-cap log close 
-log using ${logs}\bnrcvd-2023-missing, replace 
+   * GLOBALS. This is a relative FILEPATH
+   * Do not need to change 
+   do "do/bnrcvd-globals.do"
+
+   * Log file. This is a relative FILEPATH
+   * Do not need to change 
+   cap log close 
+   log using ${logs}\bnrcvd-2023-missing, replace 
+
+   * Initialize 
+   version 19 
+   clear all
+   set more off
+** ----- END INITIALIZE DO FILE -------------------
+** ------------------------------------------------
+
+** DATASET PREPARATION 
+do "${do}\bnrcvd-2023-prep1"
 
 ** --------------------------------------------------------------
-** (1) Load the interim dataset - FULL
-**     Dataset prepared in: bnrcvd-2023-prep1.do
+** Load the interim dataset - FULL
+** Dataset prepared in: bnrcvd-2023-prep1.do
 ** --------------------------------------------------------------
 use "${tempdata}\bnr-cvd-full-${today}-prep1.dta", clear 
 label var yoe "Event Year"
-
-
 
 
 ** --------------------------------------------------------------
@@ -59,10 +75,7 @@ label var yoe "Event Year"
 ** --------------------------------------------------------------
     drop if dco==1 
     drop dco 
-    drop if yoe==2009  /// This was a setup year - don't report2, 
-
-
-
+    drop if yoe==2009  /// This was a setup year - don't report, 
 
 
 ** --------------------------------------------------------------
@@ -463,7 +476,7 @@ label var yoe "Event Year"
 /// local num    = "1 2 3 4 5 6 7 8 9 10"
 /// local letter = "A B C D E F G H I J"
 ** --------------------------------------------------- 
-putexcel set "${tempdata}/bnrcvd-2023-missing.xlsx" , replace sheet("Index", replace)
+putexcel set "${tables}/bnrcvd-2023-missing.xlsx" , replace sheet("Index", replace)
 putexcel A1 = "BNR CVD Tables: Levels of Missing Data", bold font("Calibri", 14)
 forvalues i = 1/`tcount' {
     /// local n  : word `i' of `num'
@@ -495,10 +508,10 @@ global name  = "Stroke Subtype"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
     *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** HEART ATTACK SUBTYPE 
@@ -508,10 +521,10 @@ global name  = "AMI Subtype"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** DATE OF EVENT
@@ -521,10 +534,10 @@ global name  = "Date of Event"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 
 ** -------------------------------------------------------
@@ -535,10 +548,10 @@ global name  = "Date of Admission"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** DATE OF DISCHARGE
@@ -548,10 +561,10 @@ global name  = "Date of Discharge"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** DATE OF DEATH
@@ -561,10 +574,10 @@ global name  = "Date of Death"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** PREVIOUS STROKE
@@ -574,11 +587,11 @@ global name  = "Previous Stroke"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "Have assumed that this is collected for ALL events (strokes and heart attacks)"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** PREVIOUS HEART ATTACK
@@ -588,11 +601,11 @@ global name  = "Previous Heart Attack"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "Have assumed that this is collected for ALL events (strokes and heart attacks)"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** YEAR OF PREVIOUS STROKE
@@ -602,11 +615,11 @@ global name  = "Year of Previous Stroke"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "Have assumed that this is collected for ALL events (strokes and heart attacks)"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** YEAR OF PREVIOUS HEART ATTACK
@@ -616,11 +629,11 @@ global name  = "Year of Previous Heart Attack"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "Have assumed that this is collected for ALL events (strokes and heart attacks)"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** HISTORY OF HYPERTENSION
@@ -630,11 +643,11 @@ global name  = "History of Hypertension"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "How is this explored? Only if available in notes? Has the collection method changed over time?"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** HISTORY OF DIABETES
@@ -644,11 +657,11 @@ global name  = "History of Diabetes"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "How is this explored? Only if available in notes? Has the collection method changed over time?"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** DBP ON ADMISSION
@@ -658,11 +671,11 @@ global name  = "DBP on Admission"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "What defines a measurement on admission? Might a later measured be used as a proxy?"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** SBP ON ADMISSION
@@ -672,11 +685,11 @@ global name  = "SBP on Admission"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "What defines a measurement on admission? Might a later measured be used as a proxy?"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** BLOOD GLUCOSE ON ADMISSION
@@ -686,12 +699,12 @@ global name  = "Blood Glucose on Admission"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "What defines a measurement on admission? Might a later measured be used as a proxy?"
     collect notes "It feels as though BLOOD GLUCOSE=No might be left as an empty database field. But just a hunch - for confirmation?"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** ECG ON ADMISSION
@@ -701,12 +714,12 @@ global name  = "ECG on Admission"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "Might this be an ECG at any time after admission, not necessarily at admission?"
     collect notes "It feels as though ECG=No might be left as an empty database field. But just a hunch - for confirmation?"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** TROPONIN MEASUREMENT
@@ -716,12 +729,12 @@ global name  = "Troponin Measurement"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "Only for Heart Attacks."
     collect notes "There is no option for zero measurements? So if no troponin, would this variable be left blank?"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** ASSESSMENT BY ANY THERAPIST
@@ -731,12 +744,12 @@ global name  = "Assessment by Any Therapist"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "Only for Strokes."
     collect notes "This overarching variable is YES if there is a record of any individual assessment, presumably?"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** ASSESSMENT BY OT
@@ -746,12 +759,12 @@ global name  = "Assessment by Occupational Therapist"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "Only for Strokes."
     collect notes "Absence of information should presumably be coded as 99?"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** ASSESSMENT BY PT
@@ -761,12 +774,12 @@ global name  = "Assessment by Physiotherapist"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "Only for Strokes."
     collect notes "Absence of information should presumably be coded as 99?"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** ASSESSMENT BY Speech Therapist
@@ -776,12 +789,12 @@ global name  = "Assessment by Speech Therapist"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "Only for Strokes."
     collect notes "Absence of information should presumably be coded as 99?"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** SWALLOWING ASSESSMENT BY Speech Therapist
@@ -791,12 +804,12 @@ global name  = "Swallowing assessment by Speech Therapist"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "Only for Strokes."
     collect notes "Absence of information should presumably be coded as 99?"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** CT scan 
@@ -806,12 +819,12 @@ global name  = "CT scan performed/available"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "Only for Strokes"
     collect notes "Absence of information should presumably be coded as 99?"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** Reperfusion
@@ -821,11 +834,11 @@ global name  = "Reperfusion performed"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "Absence of information should presumably be coded as 99?"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** Aspirin (acute)
@@ -835,11 +848,11 @@ global name  = "Aspirin (acute)"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "Absence of information should presumably be coded as 99?"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** Aspirin (chronic)
@@ -849,11 +862,11 @@ global name  = "Aspirin (chronic)"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "Absence of information should presumably be coded as 99?"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 
 ** -------------------------------------------------------
@@ -864,11 +877,11 @@ global name  = "Discharge Meds (aspirin)"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "There is no missing data. Is this Correct? For review."
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** Discharge Medications (warfarin)
@@ -878,11 +891,11 @@ global name  = "Discharge Meds (warfarin)"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "There is no missing data. Is this Correct? For review."
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** Discharge Medications (heparin)
@@ -892,11 +905,11 @@ global name  = "Discharge Meds (heparin)"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "There is no missing data. Is this Correct? For review."
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** Discharge Medications (antiplatelet)
@@ -906,11 +919,11 @@ global name  = "Discharge Meds (antiplatelet)"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "There is no missing data. Is this Correct? For review."
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** Discharge Medications (Statin)
@@ -920,11 +933,11 @@ global name  = "Discharge Meds (statin)"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "There is no missing data. Is this Correct? For review."
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** Discharge Medications (ACE inhibitor)
@@ -934,11 +947,11 @@ global name  = "Discharge Meds (ACE inhibitor)"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "There is no missing data. Is this Correct? For review."
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 ** -------------------------------------------------------
 ** Stroke Unit 
@@ -948,11 +961,11 @@ global name  = "Admitted to Stroke Unit"
 global table = "Table-`tcount'"
 ** -------------------------------------------------------
 *--- Collect Table Information
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-missing-collect"
+    do "${do}\bnrcvd-2023-missing-collect"
     collect notes "Absence of information should presumably be coded as 99?"
     *--- Final columns / layout AND export
     collect layout (yoe) (result[total count] ${var}[1])
-    collect export "${tempdata}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
+    collect export "${tables}/bnrcvd-2023-missing.xlsx", modify sheet("${table}", replace)
 
 
 
@@ -971,7 +984,7 @@ global table = "Table-`tcount'"
     ** -------------------------------------------------------
     forvalues i = 1/`tcount' {
         mata: workbook = xl()
-        mata: workbook.load_book("${tempdata}/bnrcvd-2023-missing.xlsx")
+        mata: workbook.load_book("${tables}/bnrcvd-2023-missing.xlsx")
         mata: workbook.set_sheet("Table-`i'")
         mata: workbook.set_mode("open")     // required for editing
         mata: workbook.set_column_width(1, 6, 15)

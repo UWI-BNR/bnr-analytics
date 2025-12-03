@@ -21,16 +21,38 @@
 **     the DM/ folder.
 *--------------------------------------------------------------------
 
-*-------------------------------
-* 1. Root folders (edit once only)
-*-------------------------------
-* Change only this line when moving to a new computer
-global root "C:\yasuki\Sync\BNR-sandbox\006-dev"
-global data      "${root}\data"
-global dofiles   "${root}\do"
-global logs      "${root}\log"
-global graphs    "${root}\graphics"
-global outputs   "${root}\outputs"
+*--------------------------------------------------------------------
+** IMPORTANT NOTE 
+*--------------------------------------------------------------------
+** THIS DO FILE WAS A ONE-OFF, TO EXPLORE THE POTENTIAL 2023 DATASETS
+** FOR INCLUSION IN THE CUMULATIVE BNR-CVD DATASET
+** IT IS NOT PART OF THE REGULAR ANALYTICS PIPELINE
+*--------------------------------------------------------------------
+
+
+** ------------------------------------------------
+** ----- INITIALIZE DO FILE -----------------------
+   * Set path 
+   * (EDIT bnrpath.ado 
+   *  to change to your LOCAL PATH) 
+   bnrpath 
+
+   * GLOBALS. This is a relative FILEPATH
+   * Do not need to change 
+   do "do/bnrcvd-globals.do"
+
+   * Log file. This is a relative FILEPATH
+   * Do not need to change 
+   cap log close 
+   log using ${logs}\bnrcvd-2023-forensics2, replace 
+
+   * Initialize 
+   version 19 
+   clear all
+   set more off
+** ----- END INITIALIZE DO FILE -------------------
+** ------------------------------------------------
+
 
 ** Load dataset
 ** This represents the total *.dta files in the DM/ folder

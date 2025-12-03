@@ -1,0 +1,38 @@
+# -----------------------------------------------------------
+# BNR-CVD PROJECT GITIGNORE
+# Created by Ian Hambleton
+# 1-Dec-2025
+# -----------------------------------------------------------
+
+# IGNORE PROJECT SUB-FOLDERS
+# So we don't maintain anything except the DO files. Can always ease this limitation later. 
+# Ignore everything except ado/ and do/
+data/
+graphics/
+log/
+outputs/
+tables/
+temp/
+
+# Ignore the local REDCap token do-file (security critical)
+bnrcvd-2023-redcap-token.do
+
+# Ignore all Stata log files
+*.log
+*.smcl
+
+# Ignore exported graphics (Stata or reporting scripts)
+*.png
+
+# Ignore temporary Stata files
+*.gph
+*.tmp
+*.dta~
+
+# Ignore Python cache folders (if any future tooling is added)
+__pycache__/
+*.pyc
+
+# Ignore temporary OS files
+.DS_Store
+Thumbs.db

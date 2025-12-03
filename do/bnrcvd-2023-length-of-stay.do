@@ -33,13 +33,31 @@ It:
     and service-planning discussions.
 **************************************************************************/
 
-cap log close 
-log using ${logs}\bnrcvd-2023-length-of-stay, replace 
+** ------------------------------------------------
+** ----- INITIALIZE DO FILE -----------------------
+   * Set path 
+   * (EDIT bnrpath.ado 
+   *  to change to your LOCAL PATH) 
+   bnrpath 
 
+   * GLOBALS. This is a relative FILEPATH
+   * Do not need to change 
+   do "do/bnrcvd-globals.do"
 
-** GLOBALS 
-do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-prep1"
-do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-globals"
+   * Log file. This is a relative FILEPATH
+   * Do not need to change 
+   cap log close 
+   log using ${logs}\bnrcvd-2023-length-of-stay, replace 
+
+   * Initialize 
+   version 19 
+   clear all
+   set more off
+** ----- END INITIALIZE DO FILE -------------------
+** ------------------------------------------------
+
+** DATASET PREPARATION 
+do "${do}\bnrcvd-2023-prep1"
 
 ** --------------------------------------------------------------
 ** (1) Load the interim dataset - CASE-FATALITY
@@ -360,15 +378,15 @@ replace yaxis = yaxis + 1 if yaxis >=14
         rights("CC BY 4.0 (Attribution)") ///
         source("Hospital admissions (QEH)") ///
         contact("ian.hambleton@gmail.com") /// 
-        outfile("./bnrcvd-length-of-stay-figure1.yml")
+        outfile("${Pygraphs}/bnrcvd-length-of-stay-figure1.yml")
 
     ** XLS dataset export 
     export excel using "${graphs}/bnrcvd-length-of-stay-figure1.xlsx", sheet("data") first(var) replace 
     ** Attach meta-data to Excel spreadsheet. Inputs for DO file below
-    global meta_xlsx "${graphs}/bnrcvd-length-of-stay-figure1.xlsx"
-    global meta_yaml "${graphs}/bnrcvd-length-of-stay-figure1.yml"
+    global meta_xlsx "${Pygraphs}/bnrcvd-length-of-stay-figure1.xlsx"
+    global meta_yaml "${Pygraphs}/bnrcvd-length-of-stay-figure1.yml"
     * Do file that adds metadata to excel spreadsheet - python code 
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-meta-xlsx.do"
+    do "${do}\bnrcvd-meta-xlsx.do"
 
 
 
@@ -555,15 +573,15 @@ global ex50_ami : display %4.1f `ex50_ami'
         rights("CC BY 4.0 (Attribution)") ///
         source("Hospital admissions (QEH)") ///
         contact("ian.hambleton@gmail.com") /// 
-        outfile("./bnrcvd-length-of-stay-figure2.yml")
+        outfile("${Pygraphs}/bnrcvd-length-of-stay-figure2.yml")
 
     ** XLS dataset export 
     export excel using "${graphs}/bnrcvd-length-of-stay-figure2.xlsx", sheet("data") first(var) replace 
     ** Attach meta-data to Excel spreadsheet. Inputs for DO file below
-    global meta_xlsx "${graphs}/bnrcvd-length-of-stay-figure2.xlsx"
-    global meta_yaml "${graphs}/bnrcvd-length-of-stay-figure2.yml"
+    global meta_xlsx "${Pygraphs}/bnrcvd-length-of-stay-figure2.xlsx"
+    global meta_yaml "${Pygraphs}/bnrcvd-length-of-stay-figure2.yml"
     * Do file that adds metadata to excel spreadsheet - python code 
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-meta-xlsx.do"
+    do "${do}\bnrcvd-meta-xlsx.do"
 
 
 ** --------------------------------------------------------------

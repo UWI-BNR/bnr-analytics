@@ -37,9 +37,31 @@ It:
     2023 reporting and sensitivity analyses around inclusion of DCOs.
 **************************************************************************/
 
-** GLOBALS 
-do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-2023-prep1"
-do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-globals"
+** ------------------------------------------------
+** ----- INITIALIZE DO FILE -----------------------
+   * Set path 
+   * (EDIT bnrpath.ado 
+   *  to change to your LOCAL PATH) 
+   bnrpath 
+
+   * GLOBALS. This is a relative FILEPATH
+   * Do not need to change 
+   do "do/bnrcvd-globals.do"
+
+   * Log file. This is a relative FILEPATH
+   * Do not need to change 
+   cap log close 
+   log using ${logs}\bnrcvd-2023-incidence, replace 
+
+   * Initialize 
+   version 19 
+   clear all
+   set more off
+** ----- END INITIALIZE DO FILE -------------------
+** ------------------------------------------------
+
+** DATASET PREPARATION 
+do "${do}\bnrcvd-2023-prep1"
 
 ** ------------------------------------------
 ** (1) PREPARATION - STANDARD WORLD POPULATION
@@ -310,7 +332,7 @@ preserve
         rights("CC BY 4.0 (Attribution)") ///
         source("Hospital admissions (QEH), Death registration") ///
         contact("ian.hambleton@gmail.com") /// 
-        outfile("./bnrcvd-incidence.yml")
+        outfile("${Pydata}//bnrcvd-incidence.yml")
 restore
 
 
@@ -474,15 +496,15 @@ preserve
         rights("CC BY 4.0 (Attribution)") ///
         source("Hospital admissions (QEH)") ///
         contact("ian.hambleton@gmail.com") /// 
-        outfile("./bnrcvd-incidence-figure1.yml")
+        outfile("${Pygraphs}/bnrcvd-incidence-figure1.yml")
 
     ** XLS dataset export 
     export excel using "${graphs}/bnrcvd-incidence-figure1.xlsx", sheet("data") first(var) replace 
     ** Attach meta-data to Excel spreadsheet. Inputs for DO file below
-    global meta_xlsx "${graphs}/bnrcvd-incidence-figure1.xlsx"
-    global meta_yaml "${graphs}/bnrcvd-incidence-figure1.yml"
+    global meta_xlsx "${Pygraphs}/bnrcvd-incidence-figure1.xlsx"
+    global meta_yaml "${Pygraphs}/bnrcvd-incidence-figure1.yml"
     * Do file that adds metadata to excel spreadsheet - python code 
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-meta-xlsx.do"
+    do "${do}\bnrcvd-meta-xlsx.do"
 
     ** Statistics to accompany figure 1
     * (A) Difference between Lo and Hi in 2023
@@ -700,15 +722,15 @@ replace ub_srr = ub_srr + 0.05 if yaxis==2
         rights("CC BY 4.0 (Attribution)") ///
         source("Hospital admissions (QEH)") ///
         contact("ian.hambleton@gmail.com") /// 
-        outfile("./bnrcvd-incidence-figure2.yml")
+        outfile("${Pygraphs}/bnrcvd-incidence-figure2.yml")
 
     ** XLS dataset export 
     export excel using "${graphs}/bnrcvd-incidence-figure2.xlsx", sheet("data") first(var) replace 
     ** Attach meta-data to Excel spreadsheet. Inputs for DO file below
-    global meta_xlsx "${graphs}/bnrcvd-incidence-figure2.xlsx"
-    global meta_yaml "${graphs}/bnrcvd-incidence-figure2.yml"
+    global meta_xlsx "${Pygraphs}/bnrcvd-incidence-figure2.xlsx"
+    global meta_yaml "${Pygraphs}/bnrcvd-incidence-figure2.yml"
     * Do file that adds metadata to excel spreadsheet - python code 
-    do "C:\yasuki\Sync\BNR-sandbox\006-dev\do\bnrcvd-meta-xlsx.do"
+    do "${do}\bnrcvd-meta-xlsx.do"
     
 
 ** --------------------------------------------------------------

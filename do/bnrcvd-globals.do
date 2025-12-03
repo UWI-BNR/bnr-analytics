@@ -12,18 +12,34 @@
 *  CREATED:  `c(current_date)'
 *--------------------------------------------------------------------
 
-*-------------------------------
-* 1. Root folder (edit once only)
-*-------------------------------
-* Change only this line when moving to a new computer
-global root "C:\yasuki\Sync\BNR-sandbox\006-dev"
+** ------------------------------------------------
+** ----- INITIALIZE DO FILE -----------------------
+    * Set path 
+    * (EDIT bnrpath.ado 
+    *  to change to your LOCAL PATH) 
+    bnrpath 
+    global root "${BNRROOT}"
+    * Sanity check  
+    dis "Root path set to: ${BNRROOT}" 
+    * Log file. This is a relative FILEPATH
+    * Do not need to change 
+    cap log close 
+    log using "log\bnrcvd-globals", replace     
+    * Initialize 
+    version 19 
+    clear all
+    set more off
+** ----- END INITIALIZE DO FILE -------------------
+** ------------------------------------------------
+
 
 *-------------------------------
 * 2. Folder structure (Stata Use)
 *-------------------------------
+global do        "${root}\do"
+global ado       "${root}\ado"
 global data      "${root}\data"
 global tempdata  "${root}\temp"
-global dofiles   "${root}\do"
 global logs      "${root}\log"
 global graphs    "${root}\graphics"
 global outputs   "${root}\outputs"
@@ -31,7 +47,7 @@ global tables   "${root}\tables"
 *-------------------------------
 * 2. Folder structure (Python Use)
 *-------------------------------
-global Pyroot "C:/yasuki/Sync/BNR-sandbox/006-dev"
+global Pyroot      "${root}"
 global Pydata      "${Pyroot}/data"
 global Pytempdata  "${Pyroot}/temp"
 global Pydofiles   "${Pyroot}/do"

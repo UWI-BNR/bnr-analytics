@@ -19,20 +19,55 @@
 *     the 'correct' Stroke dataset for joining with previous years
 *--------------------------------------------------------------------
 
+*--------------------------------------------------------------------
+** IMPORTANT NOTE 
+*--------------------------------------------------------------------
+** THIS DO FILE WAS A ONE-OFF, TO EXPLORE THE POTENTIAL 2023 DATASETS
+** FOR INCLUSION IN THE CUMULATIVE BNR-CVD DATASET
+** IT IS NOT PART OF THE REGULAR ANALYTICS PIPELINE
+*--------------------------------------------------------------------
+
+** ------------------------------------------------
+** ----- INITIALIZE DO FILE -----------------------
+   * Set path 
+   * (EDIT bnrpath.ado 
+   *  to change to your LOCAL PATH) 
+   bnrpath 
+
+   * GLOBALS. This is a relative FILEPATH
+   * Do not need to change 
+   do "do/bnrcvd-globals.do"
+
+   * Log file. This is a relative FILEPATH
+   * Do not need to change 
+   cap log close 
+   log using ${logs}\bnrcvd-2023-forensics1, replace 
+
+   * Initialize 
+   version 19 
+   clear all
+   set more off
+** ----- END INITIALIZE DO FILE -------------------
+** ------------------------------------------------
+
+
 *-------------------------------
 * 1. DO file folder (edit once only)
 *-------------------------------
-    global root1 "C:\yasuki\Sync\BNR-sandbox\006-dev"
-    global dofiles   "${root1}\do"
-    global logs      "${root1}\log"
-    global jcdata      "${root1}\data"
+*    global root1 "C:\yasuki\Sync\BNR-sandbox\006-dev"
+*    global dofiles   "${root1}\do"
+*    global logs      "${root1}\log"
+*    global jcdata    "${root1}\data"
 
 
 *-------------------------------
 * 2. DATASET folder(s)
+* THESE DATASETS EXIST IN THE PRE-2025
+* BNR DOCUMENT REPOSITORY
+* CHANGE LOCATION TO LOCAL INSTANCE
 *-------------------------------
     global root2 "C:\yasuki\Sync\DM\Stata\Stata do files\Statistics"
-    global data "${root2}\analysis\dataset_preperations\BNR_for_research_use\versions\version09\data"
+    global data2 "${root2}\analysis\dataset_preperations\BNR_for_research_use\versions\version09\data"
 
 *-------------------------------
 * 3. DATE
@@ -47,7 +82,8 @@ local n = 0
 *-------------------------------
 qui {
     local n = `n' + 1 
-    use "${jcdata}\2009-2023_identifiable_restructured_cvd.dta", clear
+    use "${data}\2009-2023_identifiable_restructured_cvd.dta", clear
+    ** use "${data}\2009-2023_identifiable_restructured_cvd_30Oct2025_v2.dta", clear
     keep if rpt_redcap_event_name == "stroke_arm_1"
     order pid rpt_recid rpt_dob nrpt_cfage nrpt_fname nrpt_lname rpt_natregno 
     **keep if rpt_sd_eyear <=2019 
@@ -73,7 +109,7 @@ dis "ALTERNATIVE = " `n'
 *-------------------------------
 qui {
     local n = `n' + 1 
-    use "${data}\stroke_2009-2020_v9_names_clean.dta", clear
+    use "${data2}\stroke_2009-2020_v9_names_clean.dta", clear
     order record_id unique_id dob cfage cfage_da fname lname natregno 
     keep if year<=2019 
     count
@@ -97,7 +133,7 @@ dis "ALTERNATIVE = " `n'
 *-------------------------------
 qui {
     local n = `n' + 1 
-    use "${data}\stroke_2009-2020_v9_names_Stata_v16_clean.dta", clear
+    use "${data2}\stroke_2009-2020_v9_names_Stata_v16_clean.dta", clear
     order record_id unique_id dob cfage cfage_da fname lname natregno 
     keep if year<=2019 
     count
@@ -121,7 +157,7 @@ dis "ALTERNATIVE = " `n'
 *-------------------------------
 qui {
     local n = `n' + 1 
-    use "${data}\stroke_2009-2019_v8_names_updated2_clean.dta", clear
+    use "${data2}\stroke_2009-2019_v8_names_updated2_clean.dta", clear
     order pid dos dob age fname lname natregno 
     sort dos 
     count

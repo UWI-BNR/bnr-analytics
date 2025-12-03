@@ -47,6 +47,9 @@ MAIN STEPS
    * Do not need to change 
    do "do/bnrcvd-globals.do"
 
+    ** DATASET PREPARATION 
+    do "${do}\bnrcvd-2023-prep1"
+
    * Log file. This is a relative FILEPATH
    * Do not need to change 
    cap log close 
@@ -59,8 +62,6 @@ MAIN STEPS
 ** ----- END INITIALIZE DO FILE -------------------
 ** ------------------------------------------------
 
-** DATASET PREPARATION 
-do "${do}\bnrcvd-2023-prep1"
 
 ** --------------------------------------------------------------
 ** Load the interim dataset - CASE-FATALITY

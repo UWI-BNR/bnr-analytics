@@ -48,6 +48,9 @@ It:
    * Do not need to change 
    do "do/bnrcvd-globals.do"
 
+    ** DATASET PREPARATION 
+    do "${do}\bnrcvd-2023-prep1"
+
    * Log file. This is a relative FILEPATH
    * Do not need to change 
    cap log close 
@@ -60,8 +63,6 @@ It:
 ** ----- END INITIALIZE DO FILE -------------------
 ** ------------------------------------------------
 
-** DATASET PREPARATION 
-do "${do}\bnrcvd-2023-prep1"
 
 ** ------------------------------------------
 ** (1) PREPARATION - STANDARD WORLD POPULATION

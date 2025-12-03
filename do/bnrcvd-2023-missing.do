@@ -44,6 +44,9 @@
    * Do not need to change 
    do "do/bnrcvd-globals.do"
 
+    ** DATASET PREPARATION 
+    do "${do}\bnrcvd-2023-prep1"
+
    * Log file. This is a relative FILEPATH
    * Do not need to change 
    cap log close 
@@ -56,8 +59,7 @@
 ** ----- END INITIALIZE DO FILE -------------------
 ** ------------------------------------------------
 
-** DATASET PREPARATION 
-do "${do}\bnrcvd-2023-prep1"
+
 
 ** --------------------------------------------------------------
 ** Load the interim dataset - FULL
@@ -984,7 +986,7 @@ global table = "Table-`tcount'"
     ** -------------------------------------------------------
     forvalues i = 1/`tcount' {
         mata: workbook = xl()
-        mata: workbook.load_book("${tables}/bnrcvd-2023-missing.xlsx")
+        mata: workbook.load_book("${Pytables}/bnrcvd-2023-missing.xlsx")
         mata: workbook.set_sheet("Table-`i'")
         mata: workbook.set_mode("open")     // required for editing
         mata: workbook.set_column_width(1, 6, 15)
@@ -992,7 +994,7 @@ global table = "Table-`tcount'"
         mata: workbook.close_book()
     }
     mata: workbook = xl()
-    mata: workbook.load_book("${tempdata}/bnrcvd-2023-missing.xlsx")
+    mata: workbook.load_book("${Pytables}/bnrcvd-2023-missing.xlsx")
     mata: workbook.set_sheet("Index")
     mata: workbook.set_mode("open")     // required for editing
     mata: workbook.set_column_width(1, 1, 20)

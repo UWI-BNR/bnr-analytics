@@ -34,7 +34,7 @@
    * Log file. This is a relative FILEPATH
    * Do not need to change 
    cap log close 
-   log using ${logs}\bnrcvd-2023-count, replace 
+   log using ${logs}\bnrcvd-2023-unwpp, replace 
 
    * Initialize 
    version 19 

@@ -17,6 +17,10 @@ temp/
 # Ignore the local REDCap token do-file (security critical)
 bnrcvd-2023-redcap-token.do
 
+# Ignore compressed files 
+*.zip 
+*.7z 
+
 # Ignore all Stata log files
 *.log
 *.smcl

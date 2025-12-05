@@ -23,8 +23,8 @@
     dis "Root path set to: ${BNRROOT}" 
     * Log file. This is a relative FILEPATH
     * Do not need to change 
-    cap log close 
-    log using "log\bnrcvd-globals", replace     
+    * cap log close 
+    * log using "log\bnrcvd-globals", replace     
     * Initialize 
     version 19 
     clear all

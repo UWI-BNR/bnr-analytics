@@ -1,10 +1,12 @@
 *******************************************************
 * bnrcvd-2023-redcap.do
 *
-* REDCap → PyCap → CSV → Stata
+* REDCap → PyCap → CSV
 * - Single date range on cfadmdate
 * - Selected fields only (easy to extend)
 * - One CSV output file
+* - All variables imported as strings (no formatting)
+* - This allows much simpler python code
 *******************************************************
  
 
@@ -22,7 +24,7 @@
    * Log file. This is a relative FILEPATH
    * Do not need to change 
    cap log close 
-   log using ${logs}\bnrcvd-2023-redcap, replace 
+   log using ${logs}\bnrcvd-2023-redcap-noformat, replace 
 
    * Initialize 
    version 19 
@@ -51,7 +53,7 @@ global REDCAP_URL   "https://caribdata.org/redcap/api/"
 *    or set them before calling this DO.
 *------------------------------------------------------
 global REDCAP_START "2024-01-01"
-global REDCAP_END   "2024-02-28"
+global REDCAP_END   "2024-01-31"
 
 display "REDCap extract: cfadmdate from ${REDCAP_START} to ${REDCAP_END}"
 
@@ -199,6 +201,36 @@ end
 *------------------------------------------------------
 import delimited using "`outcsv'", clear stringcols(_all)
 
-display "Imported REDCap data into Stata."
-describe
-list in 1/10
+
+
+*-------------------------------------------------------------------*
+* CHECKING LEVELS OF MISSING DATA IN THIS NEW FILE 
+*-------------------------------------------------------------------*
+* Define list of ALL string variables from your block
+*-------------------------------------------------------------------*
+local strvars recid redcap_event_name cfdoa fname mname lname sex dob ///
+    cfage cfage_da natregno recnum cfadmdate dlc cfdod admtime parish ///
+    htype stype edate etime pstroke pstrokeyr pami pamiyr htn diab sysbp ///
+    diasbp bgmmol ecg ecgd ecgt tropres trop1res trop2res assess assess1 ///
+    assess2 assess3 assess4 ct doct reperf repertype reperfd reperft ///
+    aspdose aspd aspt asptimeampm_2 vstatus aspdosedis strunit ///
+    sunitadmsame astrunitd sunitdissame dstrunitd
+*-------------------------------------------------------------------*
+* Loop and count missing values for each string variable
+* Missing = ""  OR  "99"
+*-------------------------------------------------------------------*
+di "---- Missing counts for ALL STRING VARIABLES ----"
+foreach v of local strvars {
+
+    * Default missing rule
+    local condition `"`v' == "" | `v' == "99""'
+
+    * Override for variables where you *only* checked "" in your original code
+    if inlist("`v'", "pid", "cfage", "cfage_da") {
+        local condition `"`v' == """'
+    }
+
+    qui count if `condition'
+    di "`v' : " r(N)
+}
+*-------------------------------------------------------------------*

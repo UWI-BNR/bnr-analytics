@@ -54,7 +54,7 @@
    * Log file. This is a relative FILEPATH
    * Do not need to change 
    cap log close 
-   log using ${logs}\bnrcvd-2023-prep1, replace 
+   log using ${logs}\bnrcvd-2024-prep1, replace 
 
    * Initialize 
    version 19 
@@ -68,15 +68,48 @@
 ** (1) Load the JC created dataset
 ** 
 ** TO ALTER YEAR AND MONTH OF DATA RELEASE
-** 
-** edit: bnrpath.ado
-** Line to edit:  -->   global release "releases/y2023/m12" 
-** 
+** Alter GLOBAL variables in bnrcvd-2024-redcap-format 
 ** --------------------------------------------------------------
+
+   use "${data}/releases/y2024/m01/bnr-cvd-indiv-full-202401-v01.dta"
+   append using "${data}/releases/y2024/m02/bnr-cvd-indiv-full-202402-v01.dta", nol
+   append using "${data}/releases/y2024/m03/bnr-cvd-indiv-full-202403-v01.dta", nol
+   append using "${data}/releases/y2024/m04/bnr-cvd-indiv-full-202404-v01.dta", nol
+   append using "${data}/releases/y2024/m05/bnr-cvd-indiv-full-202405-v01.dta", nol
+   append using "${data}/releases/y2024/m06/bnr-cvd-indiv-full-202406-v01.dta", nol
+   append using "${data}/releases/y2024/m07/bnr-cvd-indiv-full-202407-v01.dta", nol
+   append using "${data}/releases/y2024/m08/bnr-cvd-indiv-full-202408-v01.dta", nol
+   append using "${data}/releases/y2024/m09/bnr-cvd-indiv-full-202409-v01.dta", nol
+   append using "${data}/releases/y2024/m10/bnr-cvd-indiv-full-202410-v01.dta", nol
+   append using "${data}/releases/y2024/m11/bnr-cvd-indiv-full-202411-v01.dta", nol
+   append using "${data}/releases/y2024/m12/bnr-cvd-indiv-full-202412-v01.dta", nol
+   replace edate = d(20jan2024) if edate == d(20jan2023) 
+   replace edate = d(13mar2024) if edate == d(13mar2023) 
+   drop if edate>d(31dec2024) 
+
+   * Drop records classified as "ineligible" (cstatus=2)
+   drop if cstatus==2 
+
+   * Explore duplicates - do any multiple rows still exist after deleting ineligibles?
+   * We do nothing we these at this point - process change likely required
+      gen recid2 = real(recid) 
+      levelsof duprec, local(dup)
+      gen dup_in_recid = 0
+      foreach x of local dup {
+         qui replace dup_in_recid = 1 if recid2 == `x'
+      }
+      order recid recid2 duprec dup_in_recid 
+      sort dup_in_recid recid2
+
+   * Save as tempfile 
+   tempfile d2024
+   save `d2024', replace
 
 ** For dataset details, see : https://uwi-bnr.github.io/bnr-refit/02_Data/structure/   
 ** use "${data}\2009-2023_identifiable_restructured_cvd_30Oct2025_v2.dta", clear 
    use "${data}/releases/y2023/m12/bnr-cvd-indiv-full-202312-v01.dta", clear 
+   qui append using `d2024'
+
 
 ** --------------------------------------------------------------
 ** (2) Drop variables we will NOT use in analytics

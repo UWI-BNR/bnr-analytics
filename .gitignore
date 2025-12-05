@@ -13,6 +13,7 @@ log/
 outputs/
 tables/
 temp/
+setup/
 
 # Ignore the local REDCap token do-file (security critical)
 bnrcvd-2023-redcap-token.do

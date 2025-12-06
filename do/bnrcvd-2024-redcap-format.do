@@ -138,9 +138,9 @@ display "REDCap extract: cfadmdate from ${REDCAP_START} to ${REDCAP_END}"
 *------------------------------------------------------
 capture mkdir "${Pytempdata}"
 local outcsv "${Pytempdata}/bnrcvd-redcap-export.csv"
-display "Main REDCap CSV will be written to: `outcsv'"
 
-
+** Using PyCap to Extract BNR event data drirectly from REDCap API
+** PID=670
 python:
 from sfi import Macro
 from redcap import Project
@@ -559,6 +559,36 @@ end
     replace cfage = cfage_da if cfage==.
 
 ** Save the Exported dataset
-    *  This file id dropped into the official release subfolder for each particular yyyy/mm
     save "${data}/releases/y${EXPORT_YR}/m${EXPORT_MO}/bnr-cvd-indiv-full-${EXPORT_DT}-${EXPORT_VS}.dta", replace 
 
+    ** --------------------------------------------------------------
+    ** (4) FULL DATASET - Monthly Release - Save
+    *  This file id dropped into the official release subfolder for each particular yyyy/mm
+    ** --------------------------------------------------------------
+    label data "BNR-CVD Monthly Release. ${EXPORT_YR}-${EXPORT_MO}. Prepared by Ian Hambleton, ${todayiso}"
+    note : Input dataset = 2009-2023_identifiable_restructured_cvd.dta
+    note : Prepared by Ian Hambleton, GA-CDRC, UWI
+    note : Date created = ${todayiso}
+    note : Input dataset created by J.Campbell, 25-Oct-2025 
+    save "${data}/releases/y${EXPORT_YR}/m${EXPORT_MO}/bnr-cvd-indiv-full-${EXPORT_DT}-${EXPORT_VS}.dta", replace 
+
+    ** Associated YAML metadata file - create and save
+    local dataset "${data}/releases/y${EXPORT_YR}/m${EXPORT_MO}/bnr-cvd-indiv-full-${EXPORT_DT}-${EXPORT_VS}.dta"
+    * Generate YAML
+    bnryaml using "`dataset'", ///
+        title("BNR-CVD Monthly Release (Identifiable)") ///
+        version("1.0") ///
+        created("${todayiso}") ///
+        creator("Ian Hambleton") ///
+        tier("FULL") ///
+        temporal("Release-2024-01 ") ///
+        spatial("Barbados") ///
+        description("Confirmed cardiovascular events.") ///
+        registry("CVD") ///
+        content("INDIV") ///
+        language("en") ///
+        format("Stata 19") ///
+        rights("Restricted - internal analytical use only") ///
+        source("Hospital admissions (QEH)") ///
+        contact("ian.hambleton@uwi.edu") /// 
+        outfile("${data}/releases/y${EXPORT_YR}/m${EXPORT_MO}/bnr-cvd-indiv-full-${EXPORT_DT}-${EXPORT_VS}.yml")

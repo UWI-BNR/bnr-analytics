@@ -134,6 +134,8 @@ preserve
         sort etype yoe woe 
         bysort etype yoe: gen cevent = sum(event) 
 
+    /// --- UPDATE 5-YEAR AVERAGE AS NEEDED --- ///
+
     ** 5-year average count (women and men combined)
         global thisyr = real(substr("${today}", 1, 4))
         tempvar latestyr time5
@@ -166,6 +168,8 @@ preserve
                 xscale(noline lw(vthin)) 
                 xtitle(" ", size(3) color(gs0) margin(l=1 r=1 t=1 b=1)) 
                 
+                /// --- UPDATE RANGE AS NEEDED --- ///
+
                 ylab(,
                 labc(gs0) labs(7) tlc(gs8) nogrid glc(gs16) angle(0) format(%9.0f))
                 yscale(lw(vthin) lc(gs8) noextend range(-40(10)70)) 
@@ -184,6 +188,9 @@ preserve
                 name(count_figure1, replace)
                 ;
     #delimit cr	
+
+    /// --- UPDATE GRAPH NAME AS NEEDED --- ///
+
     ** Export figure for briefings (PDF and online) 
     graph export "${graphs}/bnrcvd-count-figure1.png", replace width(3000)
 
@@ -199,6 +206,8 @@ preserve
     label var event3 "Events in week, 2023"
     label var cevent3 "Cumulative events in week, 2023"
     label var evdiff "2023 cum - 5-year average events"
+
+    /// --- UPDATE GRAPH METADATA FILE AS NEEDED --- ///
 
     * STATA dataset export 
     notes drop _all 
@@ -220,6 +229,8 @@ preserve
     note : contact("ian.hambleton@gmail.com") 
     note : outfile("${graphs}/bnrcvd-count-figure1.yml")
     save "${graphs}/bnrcvd-count-figure1.dta", replace 
+
+    /// --- UPDATE GRAPH METADATA FILE AS NEEDED --- ///
 
     ** Dataset-level metadata using YAML file
     bnryaml using "${graphs}/bnrcvd-count-figure1.dta", ///
@@ -256,6 +267,9 @@ restore
 **      Comparing 2023 event numbers to 5-year average  
 ** --------------------------------------------------------------
 preserve
+
+    /// --- UPDATE 5-YEAR AVERAGE AS NEEDED --- ///
+
     ** 5-year average count (women and men separately)
         global thisyr = real(substr("${today}", 1, 4))
         tempvar latestyr time5
@@ -272,8 +286,6 @@ preserve
         replace denom = denom/5 if time5==2
         gen perc = (event/denom) * 100
         drop if age70==1
-
-        ** NOTE: Save the file here
 
         gen zero = 0 
         gen p100= 100
@@ -360,6 +372,9 @@ preserve
 		name(count_figure2, replace)
 	;
     #delimit cr
+
+    /// --- UPDATE GRAPH NAME AS NEEDED --- ///
+
     graph export "${graphs}/bnrcvd-count-figure2.png", replace width(3000)
 
     ** ---------------------------------------------------------
@@ -378,6 +393,8 @@ preserve
     label var event "Event number in people <70 yrs"
     label var denom "Total events in subgroup. For 5-yr baseline = annual average"
     label var perc "Event percentage in people <70 yrs"
+
+    /// --- UPDATE GRAPH METADATA FILE AS NEEDED --- ///
 
     * STATA dataset export 
     notes drop _all 
@@ -399,6 +416,8 @@ preserve
     note : contact("ian.hambleton@gmail.com") 
     note : outfile("${graphs}/bnrcvd-count-figure2.yml")
     save "${graphs}/bnrcvd-count-figure2.dta", replace 
+
+    /// --- UPDATE GRAPH METADATA FILE AS NEEDED --- ///
 
     ** Dataset-level metadata using YAML file
     bnryaml using "${graphs}/bnrcvd-count-figure2.dta", ///
@@ -430,7 +449,7 @@ preserve
 restore
 
 
-
+/// --- BRIEFING LAYOUT FROM HERE. UPDATE AS NEEDED --- ///
 
 ** --------------------------------------------------------------
 ** REPORT: INITIALIAZE
@@ -481,6 +500,9 @@ putpdf begin, pagesize(letter)      ///
 putpdf paragraph ,  font("Montserrat", 1)
 #delimit; 
 putpdf text ("Why This Matters") , font("Montserrat Medium", 11, 000000) linebreak;
+
+/// --- BRIEFING TEXT. UPDATE AS NEEDED --- ///
+
 putpdf text ("
 Counts are the simplest and most transparent way to show what is happening in our hospital. Each number represents a person who suffered a heart attack or stroke, and together they show the pressure on our health system. Before we can interpret trends or calculate rates, we must first be confident in these raw numbers—how many people were affected, and when. Presenting counts provides the foundation for our remaining surveillance results.
 "), font("Montserrat", 9, 000000) linebreak;
@@ -491,6 +513,9 @@ Counts are the simplest and most transparent way to show what is happening in ou
 ** --------------------------------------------------------------
 #delimit ; 
 putpdf text ("What We Did") , font("Montserrat Medium", 11, 000000) linebreak;
+
+/// --- BRIEFING TEXT. UPDATE AS NEEDED --- ///
+
 putpdf text ("
 We reviewed all hospital-registered strokes and heart attacks for 2023 and compared them with the previous five years. We examined who was affected—men and women under 70 and those 70 and older—and tracked how cases built up week by week. By comparing 2023 counts with the five-year average, we could see when numbers rose above or fell below what would normally be expected.
 "), font("Montserrat", 9, 000000) linebreak;
@@ -511,6 +536,9 @@ putpdf text ("Heart Attacks") , font("Montserrat Medium", 11, ${ami_m}) linebrea
 putpdf table f1 = (1,1), width(80%) border(all,nil) halign(center);
 putpdf table f1(1,1)=image("${graphs}/bnrcvd-count-figure1.png");
 putpdf paragraph ,  font("Montserrat", 1);
+
+/// --- BRIEFING TEXT. UPDATE AS NEEDED --- ///
+
 putpdf text ("
 In 2023, the Barbados National Registry recorded 312 strokes in women and 312 in men, and 105 heart attacks in women compared with 141 in men. Strokes stayed consistently above the five-year average, ending the year about 60 cases higher than expected, while heart attacks remained below average for much of the year. The contrast may reflect how quickly each emergency is recognised and treated—stroke patients often reach hospital sooner through family or bystander action, whereas people with heart attack symptoms may delay seeking care. These differences, along with lingering post-COVID changes in health-seeking behaviour, suggest that hospital activity as much as disease burden may have shifted, underscoring the value of simple counts as an early warning for changes in care and system readiness.
 "), font("Montserrat", 9, 000000) linebreak;
@@ -532,6 +560,9 @@ putpdf text ("by Age ") , font("Montserrat Medium", 11, 000000) linebreak ;
 putpdf table f1 = (1,1), width(90%) border(all,nil) halign(center);
 putpdf table f1(1,1)=image("${graphs}/bnrcvd-count-figure2.png");
 putpdf paragraph ,  font("Montserrat", 1);
+
+/// --- BRIEFING TEXT. UPDATE AS NEEDED --- ///
+
 putpdf text ("
 Across both sexes, a large share of cardiovascular events continue to occur before age 70
 — highlighting the ongoing burden of premature disease. Among men, over half of all strokes
@@ -542,6 +573,8 @@ of Barbados’ cardiovascular disease remains preventable.
 "), font("Montserrat", 9, 000000) linebreak;
 #delimit cr
 
+
+/// --- BRIEFING FILENAME. UPDATE AS NEEDED --- ///
 
 ** PDF SAVE
 ** --------------------------------------------------------------

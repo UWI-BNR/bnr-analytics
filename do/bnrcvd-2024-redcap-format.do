@@ -1,5 +1,5 @@
 *******************************************************
-* bnrcvd-2023-redcap-format.do
+* bnrcvd-2024-redcap-format.do
 *
 * REDCap → PyCap → CSV → Stata
 * - Single date range on cfadmdate
@@ -9,7 +9,7 @@
 * - This creates a more involved python code block
 * - for a simpler python code block, see:
 *
-*      do/bnrcvd-2023-redcap-noformat.do
+*      do/bnrcvd-2024-redcap-noformat.do
 *   
 *******************************************************
  

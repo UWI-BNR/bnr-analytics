@@ -99,6 +99,8 @@ It:
     save "${tempdata}\who_std", replace
 
 
+/// --- UPDATE UN-WPP DATASET AS NEEDED --- ///
+
 ** ------------------------------------------
 ** (2) PREPARATION - UN-WPP (2024) BARBADOS DATA
 **     GATHERED USING: -bnrcvd-unwpp.do-
@@ -151,6 +153,11 @@ It:
     save `brb_pop', replace
     save "${tempdata}\brb_pop", replace
 
+
+/// --- UPDATE DCO INCLUSION AS NEEDED --- ///
+/// --- WILL DEPEND ON HOW FUTURE-BNR CHOOSES TO --- ///
+/// --- INCLUDE DCO RECORDS IN IT'S DATA HANDLING--- ///
+/// --- AND ANALYTICS--- ///
 
 ** ------------------------------------------
 ** (3) PREPARATION - DATASET JOINS
@@ -244,6 +251,7 @@ save `figure2_dataset', replace
 ** (5) CREATE INCIDENCE RATE DATASET
 ** ------------------------------------------
 tempfile bnr_incidence bnri_dco bnri_sex bnri_year bnri_etype
+** Creating rates, each using a single stratifier: dco, sex, event year, event type 
 qui {
     distrate event bpop using "`who_std'" , stand(age18) popstand(rpop) by(etype year sex dco) mult(100000) format(%8.2f) saving(`bnri_dco')
     distrate event bpop using "`who_std'" , stand(age18) popstand(rpop) by(etype year dco sex) mult(100000) format(%8.2f) saving(`bnri_sex')
@@ -309,6 +317,9 @@ label var ubsrr_year "Upper bound of ratio of adjusted rate - by year"
 label var srr_etype "Ratio of adjusted rate - by CVD event type"
 label var lbsrr_etype "Lower bound of ratio of adjusted rate - by CVD event type"
 label var ubsrr_etype "Upper bound of ratio of adjusted rate - by CVD event type"
+
+
+/// --- UPDATE DATASET METADATA FILE AS NEEDED --- ///
 
 ** ------------------------------------------
 ** (6) CREATE INCIDENCE RATE DATASET METADATA
@@ -451,6 +462,9 @@ preserve
                     name(incidence_figure1, replace)
                     ;
         #delimit cr	
+    
+        /// --- UPDATE GRAPH NAME AS NEEDED --- ///
+
         graph export "${graphs}/bnrcvd-incidence-figure1.png", replace width(3000)
 
     ** ---------------------------------------------------------
@@ -459,6 +473,9 @@ preserve
     ** ---------------------------------------------------------
     replace rateadj0 = rateadj0 + 120 if etype==2
     replace rateadj1 = rateadj1 + 120 if etype==2
+
+    /// --- UPDATE GRAPH METADATA FILE AS NEEDED --- ///
+
 * STATA dataset export 
     notes drop _all 
     label data "BNR-CVD Registry: dataset associated with CVD incidence briefing" 
@@ -479,6 +496,8 @@ preserve
     note : contact("ian.hambleton@gmail.com") 
     note : outfile("./bnrcvd-incidence-figure1.yml")
     save "${graphs}/bnrcvd-incidence-figure1.dta", replace 
+
+    /// --- UPDATE GRAPH METADATA FILE AS NEEDED --- ///
 
     ** Dataset-level metadata using YAML file
     bnryaml using "${graphs}/bnrcvd-incidence-figure1.dta", ///
@@ -674,6 +693,9 @@ replace ub_srr = ub_srr + 0.05 if yaxis==2
                     name(incidence_figure2, replace)
                     ;
         #delimit cr	
+
+        /// --- UPDATE GRAPH NAME AS NEEDED --- ///
+
         graph export "${graphs}/bnrcvd-incidence-figure2.png", replace width(3000)
 
     ** ---------------------------------------------------------
@@ -685,6 +707,9 @@ replace ub_srr = ub_srr + 0.05 if yaxis==2
     label var srr "Age-standardized Rate Ratio"
     label var lb_srr "Lower 95% bound of age-standardized Rate Ratio"
     label var ub_srr "Upper 95% bound of age-standardized Rate Ratio"
+
+    /// --- UPDATE GRAPH METADATA FILE AS NEEDED --- ///
+
     * STATA dataset export 
     notes drop _all 
     label data "BNR-CVD Registry: dataset associated with CVD incidence briefing" 
@@ -705,6 +730,8 @@ replace ub_srr = ub_srr + 0.05 if yaxis==2
     note : contact("ian.hambleton@gmail.com") 
     note : outfile("./bnrcvd-incidence-figure2.yml")
     save "${graphs}/bnrcvd-incidence-figure2.dta", replace 
+
+    /// --- UPDATE GRAPH METADATA FILE AS NEEDED --- ///
 
     ** Dataset-level metadata using YAML file
     bnryaml using "${graphs}/bnrcvd-incidence-figure2.dta", ///
@@ -733,6 +760,8 @@ replace ub_srr = ub_srr + 0.05 if yaxis==2
     * Do file that adds metadata to excel spreadsheet - python code 
     do "${do}\bnrcvd-meta-xlsx.do"
     
+
+/// --- BRIEFING LAYOUT FROM HERE. UPDATE AS NEEDED --- ///
 
 ** --------------------------------------------------------------
 ** REPORT: INITIALIAZE
@@ -783,6 +812,9 @@ putpdf begin, pagesize(letter)      ///
 putpdf paragraph ,  font("Montserrat", 1)
 #delimit; 
 putpdf text ("Why This Matters") , font("Montserrat Medium", 11, 000000) linebreak;
+
+/// --- BRIEFING TEXT. UPDATE AS NEEDED --- ///
+
 putpdf text ("
 Heart attacks and strokes remain the leading causes of serious illness and death in Barbados. Tracking how often these events occur in hospital helps us see whether prevention and treatment efforts are working. Measuring rates—not just counts—lets us compare fairly over time, even as the population grows and ages. This approach helps us tell whether apparent increases reflect real changes in cardiovascular risk, or simply demographic shifts. By following these patterns, we can see where progress is being made and where renewed attention is needed.
 "), font("Montserrat", 9, 000000) linebreak;
@@ -793,6 +825,9 @@ Heart attacks and strokes remain the leading causes of serious illness and death
 ** --------------------------------------------------------------
 #delimit ; 
 putpdf text ("What We Did") , font("Montserrat Medium", 11, 000000) linebreak;
+
+/// --- BRIEFING TEXT. UPDATE AS NEEDED --- ///
+
 putpdf text ("
 We looked at all heart attack and stroke events that were treated in hospital or recorded as the main cause of death. Using Barbados population estimates, we calculated how many people per 100,000 experienced these conditions each year. We then adjusted rates for age so that figures from different years, or between men and women, could be compared on equal terms. These analyses give a clear, evidence-based picture of how cardiovascular disease is affecting Barbadians over time.
 "), font("Montserrat", 9, 000000) linebreak;
@@ -813,6 +848,9 @@ putpdf text ("Strokes ") , font("Montserrat Medium", 11, ${str_m70}) linebreak;
 putpdf table f1 = (1,1), width(87%) border(all,nil) halign(center);
 putpdf table f1(1,1)=image("${graphs}/bnrcvd-incidence-figure1.png");
 putpdf paragraph ,  font("Montserrat", 1);
+
+/// --- BRIEFING TEXT. UPDATE AS NEEDED --- ///
+
 putpdf text ("
 The figure above tracks rates of heart attack and stroke in Barbados between 2010 and 2023 for men and women. Each solid line shows the number of hospital-treated events per 100,000 people, while the dotted line adds in deaths identified only through death certificates. The shaded areas between the lines highlight the “hidden” events that occur outside the hospital system.
 
@@ -840,6 +878,9 @@ putpdf text ("and Persistent Excess Among Men") , font("Montserrat Medium", 11, 
 putpdf table f1 = (1,1), width(70%) border(all,nil) halign(center);
 putpdf table f1(1,1)=image("${graphs}/bnrcvd-incidence-figure2.png");
 putpdf paragraph ,  font("Montserrat", 1);
+
+/// --- BRIEFING TEXT. UPDATE AS NEEDED --- ///
+
 putpdf text ("
 The figure above summarises how hospital-based rates of stroke and heart attack have changed in Barbados since 2010. Each bar shows a rate ratio comparing one group or time period with another, with values above one indicating higher rates. Because almost all serious cardiovascular events are treated at the island’s single public tertiary hospital, these figures provide a reliable picture of national trends, even though they reflect hospital events only.
 
@@ -859,10 +900,15 @@ Strengthening hypertension and diabetes control, improving recognition of stroke
 #delimit ; 
 putpdf paragraph ,  font("Montserrat", 1);
 putpdf text ("What This Means") , font("Montserrat Medium", 11, 000000) linebreak ;
+
+/// --- BRIEFING TEXT. UPDATE AS NEEDED --- ///
+
 putpdf text ("
 Taken together, these findings show that while heart attacks still claim more lives before reaching hospital, strokes are now the more frequent event treated within it—and their numbers continue to rise. Some of this increase may reflect better recognition, but it also points to a real and growing stroke burden in Barbados. Men remain at greater risk across both conditions, underscoring the need for stronger prevention, faster response to symptoms, and continued public awareness to save lives and reduce disability.
 "), font("Montserrat", 9, 000000) linebreak;
 #delimit cr
+
+/// --- BRIEFING FILENAME. UPDATE AS NEEDED --- ///
 
 ** PDF SAVE
 ** --------------------------------------------------------------

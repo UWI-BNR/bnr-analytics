@@ -75,6 +75,11 @@ drop if dco==1
 drop dco 
 drop if yoe==2009  /// This was a setup year - don't report
 
+
+/// --- UPDATE CASE-FATALITY ANALYTICS --- ///
+/// --- IN 2023, WE INCLUDE UNCERTAINTY DUE TO MISSING DATA --- ///
+/// --- THIS - HOPEFULLY - WON'T BE THE CASE IN THE FUTURE --- ///
+
 ** --------------------------------------------------------------
 ** Derive case-fatality indicators at the EVENT LEVEL 
 ** --------------------------------------------------------------
@@ -133,6 +138,9 @@ restore
 
 tempfile cf_temp1 
 save `cf_temp1', replace 
+
+
+/// --- CHECK AND UPDATE MODELLING AS NEEDED --- ///
 
 ** --------------------------------------------------------------
 ** MODELLED PROBABILITY OF DEATH
@@ -278,6 +286,9 @@ restore
                     name(incidence_figure2, replace)
                     ;
         #delimit cr	
+
+        /// --- UPDATE GRAPH NAME AS NEEDED --- ///
+
         graph export "${graphs}/bnrcvd-case-fatality-figure2.png", replace width(3000)
 
     ** --------------------------------------------------------------
@@ -437,6 +448,9 @@ restore
                     name(incidence_figure1, replace)
                     ;
         #delimit cr	
+
+    /// --- UPDATE GRAPH NAME AS NEEDED --- ///
+
     graph export "${graphs}/bnrcvd-case-fatality-figure1.png", replace width(3000)
 
 
@@ -445,6 +459,9 @@ restore
     ** With associated dataset-level and variable-level metadata 
     ** ---------------------------------------------------------
     drop cf1 cf2 cf3 cf4 cf5
+
+    /// --- UPDATE GRAPH METADATA FILE AS NEEDED --- ///
+
     * STATA dataset export 
     notes drop _all 
     label data "BNR-CVD Registry: dataset associated with CVD In-Hospital Deaths briefing" 
@@ -465,6 +482,8 @@ restore
     note : contact("ian.hambleton@gmail.com") 
     note : outfile("./bnrcvd-case-fatality-figure1.yml")
     save "${graphs}/bnrcvd-case-fatality-figure1.dta", replace 
+
+    /// --- UPDATE GRAPH METADATA FILE AS NEEDED --- ///
 
     ** Dataset-level metadata using YAML file
     bnryaml using "${graphs}/bnrcvd-case-fatality-figure1.dta", ///
@@ -493,6 +512,8 @@ restore
         * Do file that adds metadata to excel spreadsheet - python code 
         do "${do}\bnrcvd-meta-xlsx.do"
 
+
+/// --- BRIEFING LAYOUT FROM HERE. UPDATE AS NEEDED --- ///
 
 ** --------------------------------------------------------------
 ** PDF REPORT: INITIALIAZE
@@ -542,6 +563,9 @@ putpdf begin, pagesize(letter)      ///
 ** --------------------------------------------------------------
 putpdf paragraph ,  font("Montserrat", 1)
 #delimit; 
+
+/// --- BRIEFING TEXT. UPDATE AS NEEDED --- ///
+
 putpdf text ("Why This Matters") , font("Montserrat Medium", 11, 000000) linebreak;
 putpdf text ("
 Case fatality shows the proportion of patients admitted with a heart attack or stroke who die before leaving hospital. It is one of the clearest indicators of healthcare performance, reflecting how quickly patients reach care and how effectively that care is delivered. Falling rates suggest improvements in detection, treatment, or recovery support, while rising rates may point to delayed presentation, older or more complex patients, or hospital strain. Tracking these trends helps reveal whether hospital outcomes are improving over time.
@@ -553,6 +577,9 @@ Case fatality shows the proportion of patients admitted with a heart attack or s
 ** --------------------------------------------------------------
 #delimit ; 
 putpdf text ("What We Did") , font("Montserrat Medium", 11, 000000) linebreak;
+
+/// --- BRIEFING TEXT. UPDATE AS NEEDED --- ///
+
 putpdf text ("
 We analysed hospital admissions for stroke and heart attack in Barbados from 2010 to 2023. For each two-year period, we calculated the proportion of patients who died before discharge — the in-hospital case-fatality rate — by sex. To account for incomplete follow-up in recent years, we showed both confirmed hospital deaths (solid lines) and confirmed + probable deaths (dotted lines), where “probable” refers to patients who died within seven days of their event but whose discharge date has not yet been verified. The figure shows these actual rates; we used separate modelling to estimate uncertainty and adjust for age.
 "), font("Montserrat", 9, 000000) linebreak;
@@ -574,6 +601,9 @@ putpdf text ("Strokes ") , font("Montserrat Medium", 11, ${str_m70}) linebreak;
 putpdf table f1 = (1,1), width(100%) border(all,nil) halign(center);
 putpdf table f1(1,1)=image("${graphs}/bnrcvd-case-fatality-figure1.png");
 putpdf paragraph ,  font("Montserrat", 1);
+
+/// --- BRIEFING TEXT. UPDATE AS NEEDED --- ///
+
 putpdf text ("
 Between 2010 and 2023, in-hospital deaths after stroke changed little, while heart attack deaths fluctuated but trended upward. In both conditions, women consistently had higher case-fatality than men. In 2023, 27% of men and 34% of women admitted with cardiovascular disease died before discharge. After adjusting for age, the female rate fell to 30%, showing that age explains about half of this gap. Women admitted with heart attack or stroke were, on average, seven years older than men, and those who died in hospital were similarly older. Seven in ten women, compared with just over half of men, were aged 70 years or older at the time of their event. Even so, women remained more likely to die in hospital than men.
 "), font("Montserrat", 9, 000000);
@@ -589,10 +619,15 @@ putpdf table f1(1,1)=image("${graphs}/bnrcvd-case-fatality-figure2.png")
 #delimit ; 
 putpdf paragraph ,  font("Montserrat", 1);
 putpdf text ("What This Means") , font("Montserrat Medium", 11, 000000) linebreak ;
+
+/// --- BRIEFING TEXT. UPDATE AS NEEDED --- ///
+
 putpdf text ("
 Case-fatality rates show how outcomes differ once patients reach hospital care. The persistence of higher rates among women—only partly explained by age—highlights the need to understand potential differences in presentation, treatment, or recovery that may affect survival.
 "), font("Montserrat", 9, 000000);
 #delimit cr
+
+/// --- BRIEFING FILENAME. UPDATE AS NEEDED --- ///
 
 ** PDF SAVE
 ** --------------------------------------------------------------

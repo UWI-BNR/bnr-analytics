@@ -312,6 +312,9 @@ replace yaxis = yaxis + 1 if yaxis >=14
                     name(length_of_stay_figure1, replace)
                     ;
         #delimit cr	
+
+        /// --- UPDATE GRAPH NAME AS NEEDED --- ///
+
         graph export "${graphs}/bnrcvd-length-of-stay-figure1.png", replace width(3000)
 
     ** ---------------------------------------------------------
@@ -341,6 +344,8 @@ replace yaxis = yaxis + 1 if yaxis >=14
     label define etype_ 3 "Both", modify 
     label define year2_ 0 "All years", modify 
 
+    /// --- UPDATE GRAPH METADATA FILE AS NEEDED --- ///
+
     * STATA dataset export 
     notes drop _all 
     label data "BNR-CVD Registry: dataset associated with CVD length-of-stay briefing" 
@@ -361,6 +366,8 @@ replace yaxis = yaxis + 1 if yaxis >=14
     note : contact("ian.hambleton@gmail.com") 
     note : outfile("./bnrcvd-length-of-stay-figure1.yml")
     save "${graphs}/bnrcvd-length-of-stay-figure1.dta", replace 
+
+    /// --- UPDATE GRAPH METADATA FILE AS NEEDED --- ///
 
     ** Dataset-level metadata using YAML file
     bnryaml using "${graphs}/bnrcvd-length-of-stay-figure1.dta", ///
@@ -516,6 +523,9 @@ global ex50_ami : display %4.1f `ex50_ami'
                     name(length_of_stay_figure2, replace)
                     ;
         #delimit cr	
+
+        /// --- UPDATE GRAPH NAME AS NEEDED --- ///
+
         graph export "${graphs}/bnrcvd-length-of-stay-figure2.png", replace width(3000)
 
     ** ---------------------------------------------------------
@@ -535,6 +545,8 @@ global ex50_ami : display %4.1f `ex50_ami'
     label var los95 "Length of hospital stay: 95th percentile"
     label var nevent "Number of events"
     label var exdays "Extra typical bed-days per year compared to 2014"
+
+    /// --- UPDATE GRAPH METADATA FILE AS NEEDED --- ///
 
     * STATA dataset export 
     notes drop _all 
@@ -556,6 +568,8 @@ global ex50_ami : display %4.1f `ex50_ami'
     note : contact("ian.hambleton@gmail.com") 
     note : outfile("./bnrcvd-length-of-stay-figure2.yml")
     save "${graphs}/bnrcvd-length-of-stay-figure2.dta", replace 
+
+    /// --- UPDATE GRAPH METADATA FILE AS NEEDED --- ///
 
     ** Dataset-level metadata using YAML file
     bnryaml using "${graphs}/bnrcvd-length-of-stay-figure2.dta", ///
@@ -584,6 +598,8 @@ global ex50_ami : display %4.1f `ex50_ami'
     * Do file that adds metadata to excel spreadsheet - python code 
     do "${do}\bnrcvd-meta-xlsx.do"
 
+
+/// --- BRIEFING LAYOUT FROM HERE. UPDATE AS NEEDED --- ///
 
 ** --------------------------------------------------------------
 ** REPORT: INITIALIAZE
@@ -660,6 +676,9 @@ putpdf table f1(1,1)=image("${graphs}/bnrcvd-length-of-stay-figure1.png");
 
 putpdf paragraph ,  font("Montserrat", 1);
 putpdf text ("Key Messages | What This Means") , font("Montserrat Medium", 11, 000000) linebreak ;
+
+/// --- BRIEFING TEXT. UPDATE AS NEEDED --- ///
+
 putpdf text ("
 Stroke patients consistently spend longer in hospital than those admitted with heart attacks, and this gap has widened steadily over the past decade. In 2022–23, the median length of stay for stroke reached around 8–9 days (IQR typically 4–15 days), compared with 5–6 days for heart attacks (IQR about 3–8 days). Median regression shows that stroke stays have been rising by around half 
 "), font("Montserrat", 9, 000000);
@@ -681,6 +700,9 @@ a day every two years, while heart attack stays have remained stable. Difference
 
 putpdf paragraph ,  font("Montserrat", 1);
 putpdf text ("Translating Hospital Stays into Demand for Hospital Beds") , font("Montserrat Medium", 11, 000000) linebreak;
+
+/// --- BRIEFING TEXT. UPDATE AS NEEDED --- ///
+
 putpdf text ("
 Hospital planners need to understand not only how long patients typically stay, but how those stays add up across all admissions to create pressure on bed capacity. A small increase in the typical length of stay can translate into a large number of additional beds needed when multiplied across hundreds of patients. To capture this system-level impact, we created an “extra typical bed-days” metric. This measures how many more bed-days are required today compared with a decade ago, based on changes in the median length of stay and the number of stroke and heart attack admissions. Using routinely collected BNR between 2014 and 2023, we calculated the difference in median length of stay between each year and a 2014 baseline, and multiplied this by the number of events in each year. This approach avoids distortion from rare but very long hospital stays so provides a robust indicator of how routine changes in typical patient care accumulate into real bed pressure over time.
 "), font("Montserrat", 9, 000000) linebreak;
@@ -700,12 +722,17 @@ putpdf table f1 = (1,1), width(100%) border(all,nil) halign(center);
 putpdf table f1(1,1)=image("${graphs}/bnrcvd-length-of-stay-figure2.png");
 putpdf paragraph ,  font("Montserrat", 1);
 putpdf text ("Key Messages | What This Means ") , font("Montserrat Medium", 11, 000000) linebreak;
+
+/// --- BRIEFING TEXT. UPDATE AS NEEDED --- ///
+
 putpdf text ("
 The extra typical bed-days metric shows how changes in typical length of stay and the number of admissions combine to create real pressure on hospital capacity. Compared with 2014, stroke admissions in 2023 generated around 1,372 additional typical bed-days, equivalent to almost 4 extra beds occupied every day of the year. This increase arises from both a higher median length of stay and a sustained volume of stroke admissions, meaning that even modest shifts in typical stay length compound into substantial demand at the system level. In contrast, heart attack admissions contribute only a small and fairly consistent increase in typical bed-day demand when comparing each year to 2014, adding modest pressure but without the escalating pattern seen in stroke.
 
 For hospital planners, these findings demonstrate how rising bed-day demand accumulates invisibly in routine flow, stretching capacity even when total admission numbers change little year to year. Strengthening early supported discharge, improving access to step-down care, and ensuring timely rehabilitation will be essential to prevent these additional pressures from becoming enduring constraints on hospital throughput.
 "), font("Montserrat", 9, 000000);
 #delimit cr
+
+/// --- BRIEFING FILENAME. UPDATE AS NEEDED --- ///
 
 ** PDF SAVE
 ** --------------------------------------------------------------

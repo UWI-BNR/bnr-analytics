@@ -1,24 +1,25 @@
 /**************************************************************************
- DO-FILE:     bnrcvd-2023-prep1.do
+ DO-FILE:     bnrcvd-2024-prep1.do
  PROJECT:     BNR Refit Consultancy
  PURPOSE:     Imports a raw cumulative BNR CVD dataset prep-prepared 
               by JCampbell (October 2025). Further preparation to create
               analysis-ready files for entry to subsequent DO files.
 
  AUTHOR:      Ian R Hambleton
- DATE:        [2025-11-02]
+ DATE:        [2025-12-08]
  VERSION:     [v1.0]
 
- METADATA:    bnrcvd-2023-prep1.yml (same dirpath/name as dataset)
+ METADATA:    bnrcvd-2024-prep1.yml (same dirpath/name as dataset)
 
  NOTES:       DO files works on cumulative dataset provided by JC only
 
                This file moves us from
                (A) The official cumulative dataset (2009-2023), to 
                (B) The analytics dataset used by all 2023 analyses
+               (C) TO monthly 2024 dataset additions
 
                So, this DO file prepares the *intermediate analysis dataset* for the
-               2023 BNR-CVD reporting cycle. It is the key staging step between
+               2024 BNR-CVD reporting cycle. It is the key staging step between
                the official cumulative dataset (2009-2023) release and 
                the raw REDCap export and the downstream analytic scripts.
 
@@ -31,9 +32,9 @@
                    names, formats, and coding conventions across years.
                  - Produces both a full record-level dataset and a simplified count
                    dataset, saving them to the temporary data directory for use by
-                   all 2023 analytic DO files.
+                   all 2024 analytic DO files.
 
-               This file is the central preparation step for all 2023 BNR-CVD outputs:
+               This file is the central preparation step for all 2024 BNR-CVD outputs:
                it must run successfully before case-fatality, incidence, LOS, missing
                data, performance, and tabulation scripts are executed.
 

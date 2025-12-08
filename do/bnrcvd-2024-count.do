@@ -17,8 +17,8 @@
                 - by age groups
 
 This DO file produces core descriptive counts of cardiovascular events
-(stroke and acute myocardial infarction) for 2010–2023, with a focus
-on the latest year (2024).
+(stroke and acute myocardial infarction) for 2024, with a 5-year average (2018-2023) 
+for comparison.
 
 **************************************************************************/
 
@@ -136,12 +136,50 @@ drop if yoe==2009  /// This was a setup year - don't report
         gen evdiff = cevent3 - cevent2
         replace evdiff = . if etype==etype[_n-1] & evdiff[_n-1]==.
 
-    ** Jan and Feb 
+    ** JAN 
     #delimit ;
         gr twoway 
             (function y=0, range(1 52) lc(gs8%50) lp("_") lw(0.75))
-            (line evdiff woe if etype==1 & woe<=8, lw(1) color("${str_m}"))
-            (line evdiff woe if etype==2 & woe<=8, lw(1) color("${ami_m}"))
+            (line evdiff woe if etype==1 & woe<=5, lw(1) color("${str_m}"))
+            (line evdiff woe if etype==2 & woe<=5, lw(1) color("${ami_m}"))
+            ,
+                plotregion(c(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 		
+                graphregion(color(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 
+                ysize(4) xsize(16)
+
+                xlab(none, 
+                valuelabel labc(gs0) labs(2.5) notick nogrid glc(gs16) angle(45) format(%9.0f))
+                xscale(noline lw(vthin)) 
+                xtitle(" ", size(3) color(gs0) margin(l=1 r=1 t=1 b=1)) 
+                
+                ylab(-20(20)60,
+                labc(gs0) labs(7) tlc(gs8) nogrid glc(gs16) angle(0) format(%9.0f))
+                yscale(lw(vthin) lc(gs8) noextend range(-40(10)70)) 
+                ytitle(" ", color(gs8) size(4.5) margin(l=1 r=1 t=1 b=1)) 
+
+                /// 5-year average
+                text(-7.5 52 "5-year average",  place(w) size(8) color(gs4))
+                text(-40 26 "Cumulative CVD cases in 2024 compared to 5-year average (2019-2023)",  place(c) size(8) color(gs4))
+
+                legend(off size(2.5) position(9) nobox ring(0) bm(t=1 b=4 l=5 r=0) colf cols(1)
+                region(fcolor(gs16)  lw(none) margin(zero)) 
+                order(2 1) 
+                lab(1 "xx") 
+                lab(2 "xx") 		
+                )
+                name(worm_wks_01_05, replace)
+                ;
+    #delimit cr	
+    graph export "${graphs}/bnrcvd-worm-wks-01-05.png", replace width(3000)
+
+    ** FEB
+    #delimit ;
+        gr twoway 
+            (function y=0, range(1 52) lc(gs8%50) lp("_") lw(0.75))
+            (line evdiff woe if etype==1 & woe>=1 & woe<=5, lw(1) color("${str_m}%25"))
+            (line evdiff woe if etype==2 & woe>=1 & woe<=5, lw(1) color("${ami_m}%25"))
+            (line evdiff woe if etype==1 & woe>=5 & woe<=8, lw(1) color("${str_m}"))
+            (line evdiff woe if etype==2 & woe>=5 & woe<=8, lw(1) color("${ami_m}"))
             ,
                 plotregion(c(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 		
                 graphregion(color(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 
@@ -172,12 +210,52 @@ drop if yoe==2009  /// This was a setup year - don't report
     #delimit cr	
     graph export "${graphs}/bnrcvd-worm-wks-01-08.png", replace width(3000)
 
-    ** Jan to Apr
+    ** MAR
     #delimit ;
         gr twoway 
             (function y=0, range(1 52) lc(gs8%50) lp("_") lw(0.75))
-            (line evdiff woe if etype==1 & woe<=17, lw(1) color("${str_m}"))
-            (line evdiff woe if etype==2 & woe<=17, lw(1) color("${ami_m}"))
+            (line evdiff woe if etype==1 & woe>=1 & woe<=8, lw(1) color("${str_m}%25"))
+            (line evdiff woe if etype==2 & woe>=1 & woe<=8, lw(1) color("${ami_m}%25"))
+            (line evdiff woe if etype==1 & woe>=8 & woe<=13, lw(1) color("${str_m}"))
+            (line evdiff woe if etype==2 & woe>=8 & woe<=13, lw(1) color("${ami_m}"))
+            ,
+                plotregion(c(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 		
+                graphregion(color(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 
+                ysize(4) xsize(16)
+
+                xlab(none, 
+                valuelabel labc(gs0) labs(2.5) notick nogrid glc(gs16) angle(45) format(%9.0f))
+                xscale(noline lw(vthin)) 
+                xtitle(" ", size(3) color(gs0) margin(l=1 r=1 t=1 b=1)) 
+                
+                ylab(-20(20)60,
+                labc(gs0) labs(7) tlc(gs8) nogrid glc(gs16) angle(0) format(%9.0f))
+                yscale(lw(vthin) lc(gs8) noextend range(-40(10)70)) 
+                ytitle(" ", color(gs8) size(4.5) margin(l=1 r=1 t=1 b=1)) 
+
+                /// 5-year average
+                text(-7.5 52 "5-year average",  place(w) size(8) color(gs4))
+                text(-40 26 "Cumulative CVD cases in 2024 compared to 5-year average (2019-2023)",  place(c) size(8) color(gs4))
+
+                legend(off size(2.5) position(9) nobox ring(0) bm(t=1 b=4 l=5 r=0) colf cols(1)
+                region(fcolor(gs16)  lw(none) margin(zero)) 
+                order(2 1) 
+                lab(1 "xx") 
+                lab(2 "xx") 		
+                )
+                name(worm_wks_01_13, replace)
+                ;
+    #delimit cr	
+    graph export "${graphs}/bnrcvd-worm-wks-01-13.png", replace width(3000)
+
+    ** APR
+    #delimit ;
+        gr twoway 
+            (function y=0, range(1 52) lc(gs8%50) lp("_") lw(0.75))
+            (line evdiff woe if etype==1 & woe>=1 & woe<=13, lw(1) color("${str_m}%25"))
+            (line evdiff woe if etype==2 & woe>=1 & woe<=13, lw(1) color("${ami_m}%25"))
+            (line evdiff woe if etype==1 & woe>=13 & woe<=17, lw(1) color("${str_m}"))
+            (line evdiff woe if etype==2 & woe>=13 & woe<=17, lw(1) color("${ami_m}"))
             ,
                 plotregion(c(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 		
                 graphregion(color(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 
@@ -208,12 +286,52 @@ drop if yoe==2009  /// This was a setup year - don't report
     #delimit cr	
     graph export "${graphs}/bnrcvd-worm-wks-01-17.png", replace width(3000)
 
-    ** Jan to Jun
+    ** MAY
     #delimit ;
         gr twoway 
             (function y=0, range(1 52) lc(gs8%50) lp("_") lw(0.75))
-            (line evdiff woe if etype==1 & woe<=26, lw(1) color("${str_m}"))
-            (line evdiff woe if etype==2 & woe<=26, lw(1) color("${ami_m}"))
+            (line evdiff woe if etype==1 & woe>=1 & woe<=17, lw(1) color("${str_m}%25"))
+            (line evdiff woe if etype==2 & woe>=1 & woe<=17, lw(1) color("${ami_m}%25"))
+            (line evdiff woe if etype==1 & woe>=17 & woe<=22, lw(1) color("${str_m}"))
+            (line evdiff woe if etype==2 & woe>=17 & woe<=22, lw(1) color("${ami_m}"))
+            ,
+                plotregion(c(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 		
+                graphregion(color(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 
+                ysize(4) xsize(16)
+
+                xlab(none, 
+                valuelabel labc(gs0) labs(2.5) notick nogrid glc(gs16) angle(45) format(%9.0f))
+                xscale(noline lw(vthin)) 
+                xtitle(" ", size(3) color(gs0) margin(l=1 r=1 t=1 b=1)) 
+                
+                ylab(-20(20)60,
+                labc(gs0) labs(7) tlc(gs8) nogrid glc(gs16) angle(0) format(%9.0f))
+                yscale(lw(vthin) lc(gs8) noextend range(-40(10)70)) 
+                ytitle(" ", color(gs8) size(4.5) margin(l=1 r=1 t=1 b=1)) 
+
+                /// 5-year average
+                text(-7.5 52 "5-year average",  place(w) size(8) color(gs4))
+                text(-40 26 "Cumulative CVD cases in 2024 compared to 5-year average (2019-2023)",  place(c) size(8) color(gs4))
+
+                legend(off size(2.5) position(9) nobox ring(0) bm(t=1 b=4 l=5 r=0) colf cols(1)
+                region(fcolor(gs16)  lw(none) margin(zero)) 
+                order(2 1) 
+                lab(1 "xx") 
+                lab(2 "xx") 		
+                )
+                name(worm_wks_01_22, replace)
+                ;
+    #delimit cr	
+    graph export "${graphs}/bnrcvd-worm-wks-01-22.png", replace width(3000)
+
+    ** JUNE
+    #delimit ;
+        gr twoway 
+            (function y=0, range(1 52) lc(gs8%50) lp("_") lw(0.75))
+            (line evdiff woe if etype==1 & woe>=1 & woe<=22, lw(1) color("${str_m}%25"))
+            (line evdiff woe if etype==2 & woe>=1 & woe<=22, lw(1) color("${ami_m}%25"))
+            (line evdiff woe if etype==1 & woe>=22 & woe<=26, lw(1) color("${str_m}"))
+            (line evdiff woe if etype==2 & woe>=22 & woe<=26, lw(1) color("${ami_m}"))
             ,
                 plotregion(c(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 		
                 graphregion(color(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 
@@ -244,13 +362,14 @@ drop if yoe==2009  /// This was a setup year - don't report
     #delimit cr	
     graph export "${graphs}/bnrcvd-worm-wks-01-26.png", replace width(3000)
 
-
-    ** Jan to Aug
+    ** JULY
     #delimit ;
         gr twoway 
             (function y=0, range(1 52) lc(gs8%50) lp("_") lw(0.75))
-            (line evdiff woe if etype==1 & woe<=35, lw(1) color("${str_m}"))
-            (line evdiff woe if etype==2 & woe<=35, lw(1) color("${ami_m}"))
+            (line evdiff woe if etype==1 & woe>=1 & woe<=26, lw(1) color("${str_m}%25"))
+            (line evdiff woe if etype==2 & woe>=1 & woe<=26, lw(1) color("${ami_m}%25"))
+            (line evdiff woe if etype==1 & woe>=26 & woe<=31, lw(1) color("${str_m}"))
+            (line evdiff woe if etype==2 & woe>=26 & woe<=31, lw(1) color("${ami_m}"))
             ,
                 plotregion(c(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 		
                 graphregion(color(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 
@@ -276,18 +395,20 @@ drop if yoe==2009  /// This was a setup year - don't report
                 lab(1 "xx") 
                 lab(2 "xx") 		
                 )
-                name(worm_wks_01_35, replace)
+                name(worm_wks_01_31, replace)
                 ;
     #delimit cr	
-    graph export "${graphs}/bnrcvd-worm-wks-01-35.png", replace width(3000)
+    graph export "${graphs}/bnrcvd-worm-wks-01-31.png", replace width(3000)
 
 
-    ** Jan to Oct
+    ** AUG
     #delimit ;
         gr twoway 
             (function y=0, range(1 52) lc(gs8%50) lp("_") lw(0.75))
-            (line evdiff woe if etype==1 & woe<=43, lw(1) color("${str_m}"))
-            (line evdiff woe if etype==2 & woe<=43, lw(1) color("${ami_m}"))
+            (line evdiff woe if etype==1 & woe>=1 & woe<=31, lw(1) color("${str_m}%25"))
+            (line evdiff woe if etype==2 & woe>=1 & woe<=31, lw(1) color("${ami_m}%25"))
+            (line evdiff woe if etype==1 & woe>=31 & woe<=36, lw(1) color("${str_m}"))
+            (line evdiff woe if etype==2 & woe>=31 & woe<=36, lw(1) color("${ami_m}"))
             ,
                 plotregion(c(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 		
                 graphregion(color(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 
@@ -313,18 +434,133 @@ drop if yoe==2009  /// This was a setup year - don't report
                 lab(1 "xx") 
                 lab(2 "xx") 		
                 )
-                name(worm_wks_01_43, replace)
+                name(worm_wks_01_36, replace)
                 ;
     #delimit cr	
-    graph export "${graphs}/bnrcvd-worm-wks-01-43.png", replace width(3000)
+    graph export "${graphs}/bnrcvd-worm-wks-01-36.png", replace width(3000)
 
-
-    ** Jan to Dec
+    ** SEP
     #delimit ;
         gr twoway 
             (function y=0, range(1 52) lc(gs8%50) lp("_") lw(0.75))
-            (line evdiff woe if etype==1 & woe<=52, lp("- -") lw(1) color("${str_m}"))
-            (line evdiff woe if etype==2 & woe<=52, lp("_") lw(1) color("${ami_m}"))
+            (line evdiff woe if etype==1 & woe>=1 & woe<=36, lw(1) color("${str_m}%25"))
+            (line evdiff woe if etype==2 & woe>=1 & woe<=36, lw(1) color("${ami_m}%25"))
+            (line evdiff woe if etype==1 & woe>=36 & woe<=40, lw(1) color("${str_m}"))
+            (line evdiff woe if etype==2 & woe>=36 & woe<=40, lw(1) color("${ami_m}"))
+            ,
+                plotregion(c(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 		
+                graphregion(color(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 
+                ysize(4) xsize(16)
+
+                xlab(none, 
+                valuelabel labc(gs0) labs(2.5) notick nogrid glc(gs16) angle(45) format(%9.0f))
+                xscale(noline lw(vthin)) 
+                xtitle(" ", size(3) color(gs0) margin(l=1 r=1 t=1 b=1)) 
+                
+                ylab(-20(20)60,
+                labc(gs0) labs(7) tlc(gs8) nogrid glc(gs16) angle(0) format(%9.0f))
+                yscale(lw(vthin) lc(gs8) noextend range(-40(10)70)) 
+                ytitle(" ", color(gs8) size(4.5) margin(l=1 r=1 t=1 b=1)) 
+
+                /// 5-year average
+                text(-7.5 52 "5-year average",  place(w) size(8) color(gs4))
+                text(-40 26 "Cumulative CVD cases in 2024 compared to 5-year average (2019-2023)",  place(c) size(8) color(gs4))
+
+                legend(off size(2.5) position(9) nobox ring(0) bm(t=1 b=4 l=5 r=0) colf cols(1)
+                region(fcolor(gs16)  lw(none) margin(zero)) 
+                order(2 1) 
+                lab(1 "xx") 
+                lab(2 "xx") 		
+                )
+                name(worm_wks_01_40, replace)
+                ;
+    #delimit cr	
+    graph export "${graphs}/bnrcvd-worm-wks-01-40.png", replace width(3000)
+
+    ** OCT
+    #delimit ;
+        gr twoway 
+            (function y=0, range(1 52) lc(gs8%50) lp("_") lw(0.75))
+            (line evdiff woe if etype==1 & woe>=1 & woe<=40, lw(1) color("${str_m}%25"))
+            (line evdiff woe if etype==2 & woe>=1 & woe<=40, lw(1) color("${ami_m}%25"))
+            (line evdiff woe if etype==1 & woe>=40 & woe<=44, lw(1) color("${str_m}"))
+            (line evdiff woe if etype==2 & woe>=40 & woe<=44, lw(1) color("${ami_m}"))
+            ,
+                plotregion(c(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 		
+                graphregion(color(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 
+                ysize(4) xsize(16)
+
+                xlab(none, 
+                valuelabel labc(gs0) labs(2.5) notick nogrid glc(gs16) angle(45) format(%9.0f))
+                xscale(noline lw(vthin)) 
+                xtitle(" ", size(3) color(gs0) margin(l=1 r=1 t=1 b=1)) 
+                
+                ylab(-20(20)60,
+                labc(gs0) labs(7) tlc(gs8) nogrid glc(gs16) angle(0) format(%9.0f))
+                yscale(lw(vthin) lc(gs8) noextend range(-40(10)70)) 
+                ytitle(" ", color(gs8) size(4.5) margin(l=1 r=1 t=1 b=1)) 
+
+                /// 5-year average
+                text(-7.5 52 "5-year average",  place(w) size(8) color(gs4))
+                text(-40 26 "Cumulative CVD cases in 2024 compared to 5-year average (2019-2023)",  place(c) size(8) color(gs4))
+
+                legend(off size(2.5) position(9) nobox ring(0) bm(t=1 b=4 l=5 r=0) colf cols(1)
+                region(fcolor(gs16)  lw(none) margin(zero)) 
+                order(2 1) 
+                lab(1 "xx") 
+                lab(2 "xx") 		
+                )
+                name(worm_wks_01_44, replace)
+                ;
+    #delimit cr	
+    graph export "${graphs}/bnrcvd-worm-wks-01-44.png", replace width(3000)
+
+    ** NOV
+    #delimit ;
+        gr twoway 
+            (function y=0, range(1 52) lc(gs8%50) lp("_") lw(0.75))
+            (line evdiff woe if etype==1 & woe>=1 & woe<=44, lw(1) color("${str_m}%25"))
+            (line evdiff woe if etype==2 & woe>=1 & woe<=44, lw(1) color("${ami_m}%25"))
+            (line evdiff woe if etype==1 & woe>=44 & woe<=48, lw(1) color("${str_m}"))
+            (line evdiff woe if etype==2 & woe>=44 & woe<=48, lw(1) color("${ami_m}"))
+            ,
+                plotregion(c(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 		
+                graphregion(color(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 
+                ysize(4) xsize(16)
+
+                xlab(none, 
+                valuelabel labc(gs0) labs(2.5) notick nogrid glc(gs16) angle(45) format(%9.0f))
+                xscale(noline lw(vthin)) 
+                xtitle(" ", size(3) color(gs0) margin(l=1 r=1 t=1 b=1)) 
+                
+                ylab(-20(20)60,
+                labc(gs0) labs(7) tlc(gs8) nogrid glc(gs16) angle(0) format(%9.0f))
+                yscale(lw(vthin) lc(gs8) noextend range(-40(10)70)) 
+                ytitle(" ", color(gs8) size(4.5) margin(l=1 r=1 t=1 b=1)) 
+
+                /// 5-year average
+                text(-7.5 52 "5-year average",  place(w) size(8) color(gs4))
+                text(-40 26 "Cumulative CVD cases in 2024 compared to 5-year average (2019-2023)",  place(c) size(8) color(gs4))
+
+                legend(off size(2.5) position(9) nobox ring(0) bm(t=1 b=4 l=5 r=0) colf cols(1)
+                region(fcolor(gs16)  lw(none) margin(zero)) 
+                order(2 1) 
+                lab(1 "xx") 
+                lab(2 "xx") 		
+                )
+                name(worm_wks_01_48, replace)
+                ;
+    #delimit cr	
+    graph export "${graphs}/bnrcvd-worm-wks-01-48.png", replace width(3000)
+
+    ** DEC
+    #delimit ;
+        gr twoway 
+            (function y=0, range(1 52) lc(gs8%50) lp("_") lw(0.75))
+            (line evdiff woe if etype==1 & woe>=1 & woe<=48, lw(1) color("${str_m}%25"))
+            (line evdiff woe if etype==2 & woe>=1 & woe<=48, lw(1) color("${ami_m}%25"))
+            (line evdiff woe if etype==1 & woe>=48 & woe<=52, lw(1) color("${str_m}"))
+            (line evdiff woe if etype==2 & woe>=48 & woe<=52, lw(1) color("${ami_m}"))
             ,
                 plotregion(c(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 		
                 graphregion(color(gs16) ic(gs16) ilw(thin) lw(thin) margin(l=2 r=2 b=0 t=0)) 
@@ -354,3 +590,8 @@ drop if yoe==2009  /// This was a setup year - don't report
                 ;
     #delimit cr	
     graph export "${graphs}/bnrcvd-worm-wks-01-52.png", replace width(3000)
+
+
+
+
+
